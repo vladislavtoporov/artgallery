@@ -6,6 +6,9 @@ import ru.kpfu.itis.repository.UserRepository;
 
 @Service
 public class UserService {
-//    @Autowired
-//    private UserRepository userRepository;
+    private UserRepository userRepository;
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 }

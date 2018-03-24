@@ -11,11 +11,11 @@ import java.util.List;
 @Controller
 @RequestMapping()
 public class UsersController {
-//    private UserRepository userRepository;
-//    @Autowired
-//    public void setUserRepository(UserRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
+    private UserRepository userRepository;
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @RequestMapping(value = "/hello")
     @ResponseBody
