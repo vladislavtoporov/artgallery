@@ -77,6 +77,20 @@ public class PersistenceConfig {
         properties.setProperty("hibernate.enable_lazy_load_no_trans", "true");
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
+
+//        properties.setProperty("spring.jpa.generate-ddl",
+//                environment.getProperty("spring.jpa.generate-ddl"));
+//
+//        properties.setProperty("spring.jpa.properties.javax.persistence.schema-generation.create-source",
+//                environment.getProperty("spring.jpa.properties.javax.persistence.schema-generation.create-source"));
+//
+//        properties.setProperty("spring.jpa.properties.javax.persistence.schema-generation.scripts.action",
+//                environment.getProperty("spring.jpa.properties.javax.persistence.schema-generation.scripts.action"));
+//
+//        properties.setProperty("spring.jpa.properties.javax.persistence.schema-generation.scripts.create-target",
+//                environment.getProperty("spring.jpa.properties.javax.persistence.schema-generation.scripts.create-target"));
+
+
         return properties;
     }
 }

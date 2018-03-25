@@ -17,7 +17,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 @Configuration
 @ComponentScan("ru.kpfu.itis")
 @EnableWebMvc
-@PropertySource(value = "classpath:\\db.properties")
+@PropertySource(value = "classpath:\\heroku.properties")
 public class AppConfig extends WebMvcConfigurerAdapter {
 
     @Bean

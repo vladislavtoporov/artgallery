@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Dependencies -->
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <lombok.version>1.16.0</lombok.version>
         <postgresql.version>9.4.1207</postgresql.version>
         <spring.version>4.0.2.RELEASE</spring.version>
@@ -144,9 +144,73 @@
                 </configuration>
             </plugin>
 
+            <!--<plugin>-->
+            <!--&lt;!&ndash; run command "mvn hibernate3:hbm2ddl" to generate DLL &ndash;&gt;-->
+            <!--<groupId>org.codehaus.mojo</groupId>-->
+            <!--<artifactId>hibernate3-maven-plugin</artifactId>-->
+            <!--<version>3.0</version>-->
+            <!--<configuration>-->
+            <!--<hibernatetool>-->
+            <!--<classpath>-->
+            <!--<path location="${project.build.directory}/classes" />-->
+            <!--<path location="${project.basedir}/src/main/resources/META-INF/" />-->
+            <!--</classpath>-->
+
+            <!--<jpaconfiguration persistenceunit="galleryPersistenceUnit" />-->
+            <!--<hbm2ddl create="true" export="false" destdir="${project.basedir}/target" drop="true" outputfilename="create.sql" format="true" console="true"/>-->
+            <!--</hibernatetool>-->
+            <!--</configuration>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>postgres</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <version>${postgresql.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jdbc</artifactId>
+                    <version>9.0.0.M26</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>heroku</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>3.0.2</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.github.jsimone</groupId>
+                                            <artifactId>webapp-runner</artifactId>
+                                            <version>8.5.27.0</version>
+                                            <destFileName>webapp-runner.jar</destFileName>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 
 </project>
