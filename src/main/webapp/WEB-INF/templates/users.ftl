@@ -1,3 +1,3 @@
 <#list users as user>
-    <p>${user}</p>
+    <p>${user.name}</p>
 </#list>
