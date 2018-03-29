@@ -1,5 +1,6 @@
 package ru.kpfu.itis.artgallery.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Image {
     @Column(length = 50)
     private String path;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibit_id", nullable = false)
     private Exhibit exhibit;

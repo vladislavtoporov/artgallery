@@ -1,5 +1,6 @@
 package ru.kpfu.itis.artgallery.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ru.kpfu.itis.artgallery.enums.Role;
 
@@ -25,18 +26,22 @@ public class User {
     @Column(length = 50)
     private String username;
 
+    @JsonIgnore
     @Column(unique = true, length = 50, nullable = false)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
+    @JsonIgnore
     @Column(name = "avatar_path")
     private String avatarPath;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonIgnore
     @ManyToMany(targetEntity = Exposition.class, cascade = CascadeType.ALL)
     @JoinTable(name = "user_exposition",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

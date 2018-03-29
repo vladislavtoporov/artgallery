@@ -19,4 +19,13 @@ public class WebConfiguration extends AbstractAnnotationConfigDispatcherServletI
         return new String[] { "/" };
     }
 
+//    @Override
+//    public void onStartup(ServletContext servletContext) throws ServletException {
+//        servletContext.addListener(ServletListener.class);
+//    }
+
+    //    @Override
+//    protected void registerContextLoaderListener(ServletContext servletContext) {
+//        super.registerContextLoaderListener(servletContext);
+//    }
 }

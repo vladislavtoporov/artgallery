@@ -36,7 +36,6 @@ public class Exposition {
     private Set<Exhibit> exhibits;
 
 
-
     @ManyToMany(targetEntity = User.class, mappedBy = "expositionsAccess")
     private Set<User> usersAccess;
 

@@ -1,5 +1,6 @@
 package ru.kpfu.itis.artgallery.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,13 +40,16 @@ public class Exhibit {
     @Column(name = "count_votes", columnDefinition="INT DEFAULT 0")
     private Integer countVotes;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "exhibit")
     private Set<Image> images;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exposition_id", nullable = false)
     private Exposition exposition;
