@@ -1,5 +1,7 @@
 package ru.kpfu.itis.artgallery.services;
 
-public interface UserService {
+import ru.kpfu.itis.artgallery.forms.UserRegistrationForm;
 
+public interface UserService {
+    void register(UserRegistrationForm userForm);
 }

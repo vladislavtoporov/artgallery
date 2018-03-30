@@ -17,14 +17,14 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
+    @SequenceGenerator(name = "users_id_seq", sequenceName = "users_id_seq", allocationSize = 1)
     private Long id;
-
     @Column(length = 50, nullable = false)
     private String name;
 
     @Column(length = 50)
-    private String username;
+    private String login;
 
     @JsonIgnore
     @Column(unique = true, length = 50, nullable = false)
