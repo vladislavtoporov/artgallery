@@ -144,8 +144,8 @@ public class AdminController {
         return "admin/mailbox";
     }
 
-    @GetMapping("/readMail")
-    public String readMail(Model model, Authentication authentication) {
+    @GetMapping("/readMail/{id}")
+    public String readMail(Model model, @PathVariable Long id, Authentication authentication) {
         User user = authService.getUserByAuthentication(authentication);
         model.addAttribute("user", user);
         model.addAttribute("model", newsRepository.findAll());

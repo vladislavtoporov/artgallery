@@ -1,15 +1,11 @@
 package ru.kpfu.itis.artgallery.controllers;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.artgallery.enums.Role;
-import ru.kpfu.itis.artgallery.forms.AjaxForm;
-import ru.kpfu.itis.artgallery.forms.ExhibitForm;
-import ru.kpfu.itis.artgallery.forms.ExpositionForm;
-import ru.kpfu.itis.artgallery.forms.UserForm;
+import ru.kpfu.itis.artgallery.forms.*;
 import ru.kpfu.itis.artgallery.models.*;
 import ru.kpfu.itis.artgallery.repositories.*;
 import ru.kpfu.itis.artgallery.services.AuthenticationService;
@@ -26,10 +22,10 @@ public class EntityRestController {
     private TopicRepository topicRepository;
     private UserRepository userRepository;
     private AuthenticationService authenticationService;
-    private static final Logger log = Logger.getLogger(EntityRestController.class);
+    private PrivateMessageRepository privateMessageRepository;
 
     @Autowired
-    public EntityRestController(ExhibitRepository exhibitRepository, ExpositionRepository expositionRepository, NewsRepository newsRepository, PostRepository postRepository, TopicRepository topicRepository, UserRepository userRepository, AuthenticationService authenticationService) {
+    public EntityRestController(ExhibitRepository exhibitRepository, ExpositionRepository expositionRepository, NewsRepository newsRepository, PostRepository postRepository, TopicRepository topicRepository, UserRepository userRepository, AuthenticationService authenticationService, PrivateMessageRepository privateMessageRepository) {
         this.exhibitRepository = exhibitRepository;
         this.expositionRepository = expositionRepository;
         this.newsRepository = newsRepository;
@@ -37,17 +33,16 @@ public class EntityRestController {
         this.topicRepository = topicRepository;
         this.userRepository = userRepository;
         this.authenticationService = authenticationService;
+        this.privateMessageRepository = privateMessageRepository;
     }
 
     @GetMapping(value = "/exhibits")
     public List exhibitGetAll() {
-        log.info("exhibitGetAll is executed");
         return exhibitRepository.findAll();
     }
 
     @GetMapping(value = "/exhibits/{id}")
     public Exhibit exhibitGetById(@PathVariable("id") Long id) {
-        log.info("exhibitGetById is executed");
         return exhibitRepository.getOne(id);
     }
 
@@ -55,7 +50,6 @@ public class EntityRestController {
     @PostMapping(value = "/exhibits/add")
     public ResponseEntity<?> exhibitAdd(@RequestBody ExhibitForm exhibitForm,
                                         Authentication authentication) {
-        log.info("exhibitAdd is executed");
         AjaxForm result = new AjaxForm();
         Exposition exposition = expositionRepository.getOne(exhibitForm.getExpositionId());
         User author = authenticationService.getUserByAuthentication(authentication);
@@ -65,7 +59,6 @@ public class EntityRestController {
             exhibitRepository.save(exhibit);
             result.setMsg("success");
         } catch (Exception e) {
-            log.error("exhibitAdd error", e);
             result.setMsg("badRequest");
 
         }
@@ -76,7 +69,6 @@ public class EntityRestController {
     @PostMapping(value = "/exhibits/{id}/edit")
     public ResponseEntity<?> exhibitEdit(@RequestBody ExhibitForm exhibitForm,
                                          Authentication authentication) {
-        log.info("exhibitAdd is executed");
         AjaxForm result = new AjaxForm();
         Exposition exposition = expositionRepository.getOne(exhibitForm.getExpositionId());
         User author = authenticationService.getUserByAuthentication(authentication);
@@ -89,7 +81,6 @@ public class EntityRestController {
             exhibitRepository.save(exhibit);
             result.setMsg("success");
         } catch (Exception e) {
-            log.error("exhibitAdd error", e);
             result.setMsg("badRequest");
         }
         return ResponseEntity.ok(result);
@@ -335,6 +326,25 @@ public class EntityRestController {
             userRepository.delete(id);
             result.setMsg("success");
         } catch (Exception e) {
+            result.setMsg("badRequest");
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping(value = "privateMessages/add")
+    public ResponseEntity<?> privateMessageAdd(@RequestBody PrivateMessageForm privateMessageForm,
+                                               Authentication authentication) {
+        AjaxForm result = new AjaxForm();
+        User user = authenticationService.getUserByAuthentication(authentication);
+        PrivateMessage privateMessage = new PrivateMessage();
+        privateMessage.setContent(privateMessageForm.getContent());
+        privateMessage.setSender(user);
+        try {
+            privateMessage.setRecipient(userRepository.findOneByLogin(privateMessageForm.getRecipient()).get());
+            privateMessageRepository.save(privateMessage);
+            result.setMsg("success");
+        } catch (Exception e) {
+            e.printStackTrace();
             result.setMsg("badRequest");
         }
         return ResponseEntity.ok(result);

@@ -7,8 +7,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FileUpload extends StoredFile {
     private String name;
-
+    private Long exhibitId;
     private MultipartFile file;
+
+    public Long getExhibitId() {
+        return exhibitId;
+    }
+
+    public void setExhibitId(Long exhibitId) {
+        this.exhibitId = exhibitId;
+    }
 
     public String getUrl() {
         if (version != null && format != null && publicId != null) {

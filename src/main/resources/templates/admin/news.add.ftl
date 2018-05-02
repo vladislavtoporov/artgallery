@@ -33,10 +33,13 @@
                         <div id="feedback"></div>
                         <form id="news-form">
                             <input type="hidden" id="id" value="${model.id!""}">
-                            <input required type="text" id="header" value="${model.header!""}" pattern=".+">
+                            <input placeholder="название" class="form-control pull-right" required type="text"
+                                   id="header" value="${model.header!""}" pattern=".+">
                             <textarea required id="preview" rows="4" cols="80">${model.preview!""}</textarea>
                             <textarea required id="content" rows="10" cols="80">${model.content!""}</textarea>
-                            <input class="btn btn-sm btn-primary" type="submit" value="Сохранить" id="submit">
+                            <div class="text-center">
+                                <input class="btn btn-lg btn-primary" type="submit" value="Сохранить" id="submit">
+                            </div>
                         </form>
                     </div>
                     <!-- /.box -->

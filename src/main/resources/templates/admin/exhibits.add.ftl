@@ -28,18 +28,6 @@
         <section class="content">
             <div class="row">
                 <div class="col-md-12">
-                <#--<div class="box-header">-->
-                    <!-- tools box -->
-                <#--<div class="pull-right box-tools">-->
-                <#--<button type="button" class="btn btn-info btn-sm" data-widget="collapse" data-toggle="tooltip"-->
-                <#--name="Collapse">-->
-                <#--<i class="fa fa-minus"></i></button>-->
-                <#--<button type="button" class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip"-->
-                <#--name="Remove">-->
-                <#--<i class="fa fa-times"></i></button>-->
-                <#--</div>-->
-                    <!-- /. tools -->
-                <#--</div>-->
                     <!-- /.box-header -->
                     <div class="box-body pad">
                         <div id="feedback"></div>
@@ -48,16 +36,42 @@
                         <#if model.exposition??>
                             <input type="hidden" id="exp-id" value="${model.exposition.id!""}">
                         </#if>
-                            <input required pattern=".+" type="text" id="name" value="${model.name!""}">
+                            <input class="form-control pull-right" placeholder="название" required pattern=".+"
+                                   type="text" id="name" value="${model.name!""}">
                             <textarea required id="content" rows="10" cols="80">${model.content!""}</textarea>
 
-                            <select required id="exposition_id">
+                            <select class="form-control pull-right" required id="exposition_id">
                             <#list expositions as e>
                                 <option value="${e.id}" id="${e.id}">${e.name}</option>
                             </#list>
                             </select>
-                            <input class="btn btn-sm btn-primary" type="submit" value="Сохранить" id="submit">
+                            <div class="text-center">
+                                <input class="btn btn-lg btn-primary" type="submit" value="Сохранить" id="submit">
+                            </div>
                         </form>
+
+                    <#if model.id??>
+                        <form id="form1" enctype="multipart/form-data" method="post" action="/upload">
+                            <input placeholder="Enter file name" class="form-control pull-right" type="text"
+                                   name="originName"
+                                   id="originName">
+                            <div class="btn btn-default btn-file">
+                                <i class="fa fa-paperclip"></i> Прикрепить изображение
+                                <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected()"/>
+                            </div>
+                            <div id="fileName"></div>
+                            <div id="fileSize"></div>
+                            <div id="fileType"></div>
+                            <input type="button" class="btn btn-default btn-file" onclick="uploadFile()"
+                                   value="Upload"/>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                     aria-valuenow="40"
+                                     aria-valuemin="0" aria-valuemax="100" style="width:0%" id="progressNumber">
+                                </div>
+                            </div>
+                        </form>
+                    </#if>
                     </div>
                     <!-- /.box -->
                 </div>
@@ -125,6 +139,56 @@
             });
         });
     });
+</script>
+<script type="application/javascript">
+    function fileSelected() {
+        var file = document.getElementById('fileToUpload').files[0];
+        if (file) {
+            var fileSize = 0;
+            if (file.size > 1024 * 1024)
+                fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+            else
+                fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+
+            document.getElementById('fileName').innerHTML = 'Name: ' + file.name;
+            document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
+            document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
+        }
+    }
+
+    function uploadFile() {
+        var fd = new FormData();
+        fd.append("name", $('#originName').val());
+        fd.append("exhibitId", $('#id').val());
+        fd.append("file", document.getElementById('fileToUpload').files[0]);
+        var xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener("progress", uploadProgress, false);
+        xhr.addEventListener("error", uploadFailed, false);
+        xhr.addEventListener("abort", uploadCanceled, false);
+        xhr.open("POST", "/upload");
+        xhr.send(fd);
+    }
+
+    function uploadProgress(evt) {
+        if (evt.lengthComputable) {
+            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+            $('#progressNumber').css('width', percentComplete.toString() + '%');
+//            $('#progressNumber').val(percentComplete.toString() + '%');
+            document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+        }
+    }
+
+    function uploadComplete(evt) {
+        /* This event is raised when the server send back a response */
+    }
+
+    function uploadFailed(evt) {
+        alert("There was an error attempting to upload the file.");
+    }
+
+    function uploadCanceled(evt) {
+        alert("The upload has been canceled by the user or the browser dropped the connection.");
+    }
 </script>
 </body>
 </html>

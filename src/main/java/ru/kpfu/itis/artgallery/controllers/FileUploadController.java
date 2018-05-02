@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ru.kpfu.itis.artgallery.models.File;
 import ru.kpfu.itis.artgallery.models.FileUpload;
 import ru.kpfu.itis.artgallery.models.User;
+import ru.kpfu.itis.artgallery.repositories.ExhibitRepository;
 import ru.kpfu.itis.artgallery.repositories.FileRepository;
 import ru.kpfu.itis.artgallery.services.AuthenticationService;
 import ru.kpfu.itis.artgallery.validators.PhotoUploadValidator;
@@ -27,6 +28,8 @@ import java.util.Map;
 public class FileUploadController {
     @Autowired
     private FileRepository fileRepository;
+    @Autowired
+    private ExhibitRepository exhibitRepository;
     @Autowired
     private AuthenticationService authenticationService;
     @Value("${CLOUDINARY_URL}")
@@ -78,6 +81,9 @@ public class FileUploadController {
             file.setContentType((String) uploadResult.getOrDefault("resource_type", "raw"));
             file.setUser(user);
             file.setUpload(fileUpload);
+            if (fileUpload.getExhibitId() != null) {
+                file.setExhibit(exhibitRepository.getOne(fileUpload.getExhibitId()));
+            }
             model.addAttribute("upload", uploadResult);
             fileRepository.save(file);
             model.addAttribute("file", file);

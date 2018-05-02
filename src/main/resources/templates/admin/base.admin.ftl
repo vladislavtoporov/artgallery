@@ -160,7 +160,7 @@
                                 </li>
                                 <li>
                                     <a href="#">
-                                        <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                                        <i class="fa fa-shopping-cart text-green"></i> 35 sales made
                                     </a>
                                 </li>
                                 <li>
@@ -258,8 +258,8 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="${user_image}"
-                             class="user-file" alt="User Image">
+                        <img src="${user_image}" width="20px" height="20px"
+                             class="img-circle" alt="User Image">
                         <span class="hidden-xs">${user.name}</span>
                     </a>
                     <ul class="dropdown-menu">
@@ -267,10 +267,10 @@
                         <li class="user-header">
                             <img src="${user_image}"
                                  class="img-circle" alt="User Image">
-                        <#--<p>-->
-                        <#--${user.name}-->
-                        <#--<small>Motto</small>-->
-                        <#--</p>-->
+                            <p>
+                            ${user.name}
+                                <small>Motto</small>
+                            </p>
                         </li>
                         <!-- Menu Body -->
                         <li class="user-body">
@@ -344,6 +344,7 @@
             <li><a href="/admin/exhibits"><i class="fa fa-circle-o text-yellow"></i> <span>Exhibits</span></a></li>
             <li><a href="/admin/news"><i class="fa fa-circle-o text-aqua"></i> <span>News</span></a></li>
             <li><a href="/admin/users"><i class="fa fa-circle-o text-purple"></i> <span>Users</span></a></li>
+            <li><a href="/admin/mailbox"><i class="fa fa-circle-o text-lime"></i> <span>Mailbox</span></a></li>
 
         </ul>
     </section>

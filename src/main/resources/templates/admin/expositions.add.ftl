@@ -37,15 +37,15 @@
                     <div class="box-body pad">
                         <div id="feedback"></div>
                         <form id="exposition-form">
-                            <div class="input-group">
-                                <input type="hidden" id="id" value="${model.id!""}">
-                                <input placeholder="название" required pattern=".+" class="form-control pull-right"
-                                       type="text" id="name" value="${model.name!""}">
-                                <input type="text" class="form-control pull-right" id="reservation">
-                            </div>
+                            <input type="hidden" id="id" value="${model.id!""}">
+                            <input placeholder="название" required pattern=".+" class="form-control pull-right"
+                                   type="text" id="name" value="${model.name!""}">
+                            <input type="text" class="form-control pull-right" id="reservation">
                             <textarea required id="description" rows="10"
                                       cols="80">${model.description!"описание экспозиции"}</textarea>
-                            <input class="btn btn-sm btn-primary" type="submit" value="Сохранить" id="submit">
+                            <div class="text-center">
+                                <input class="btn btn-lg btn-primary" type="submit" value="Сохранить" id="submit">
+                            </div>
 
                         </form>
                     </div>
