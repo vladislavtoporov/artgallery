@@ -44,7 +44,7 @@ CREATE TABLE file
   ticket_id   BIGINT    NOT NULL
 );
 
-CREATE TABLE image
+CREATE TABLE file
 (
   id          BIGSERIAL NOT NULL
     CONSTRAINT image_pkey

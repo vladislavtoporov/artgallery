@@ -6,7 +6,10 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import ru.kpfu.itis.artgallery.forms.LoginForm;
 import ru.kpfu.itis.artgallery.forms.UserRegistrationForm;
+import ru.kpfu.itis.artgallery.models.User;
 import ru.kpfu.itis.artgallery.repositories.UserRepository;
+
+import java.util.Optional;
 
 @Component
 public class LoginFormValidator implements Validator {
@@ -25,8 +28,12 @@ public class LoginFormValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         LoginForm form = (LoginForm) target;
+        Optional<User> existedUser = usersRepository.findOneByLogin(form.getLogin());
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "login", "empty.login", "Пустой login");
+        if (!existedUser.isPresent()) {
+            errors.reject("bad.login", "Неправильный логин или пароль");
+        }
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "login", "empty.login", "Пустой email");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "empty.password", "Пустой пароль");
     }
 }

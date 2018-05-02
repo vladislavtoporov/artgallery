@@ -3,27 +3,14 @@
 <html>
 <head>
 <@head/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="/bower_components/Ionicons/css/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="/dist/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. Choose a skin from the css/skins
-         folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="/dist/css/skins/_all-skins.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="/plugins/timepicker/bootstrap-timepicker.min.css">
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
-
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -39,7 +26,7 @@
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li><a href="#">Expositions</a></li>
-                <li class="active">Name</li>
+                <li class="active">${model.name!"New"}</li>
             </ol>
         </section>
 
@@ -50,12 +37,16 @@
                     <div class="box-body pad">
                         <div id="feedback"></div>
                         <form id="exposition-form">
-                        <#if model??>
-                            <input type="hidden" id="id" value="${model.id!""}">
-                            <input type="text" id="name" value="${model.name!""}">
-                            <textarea id="description" rows="10" cols="80">${model.description!""}</textarea>
-                        </#if>
+                            <div class="input-group">
+                                <input type="hidden" id="id" value="${model.id!""}">
+                                <input placeholder="название" required pattern=".+" class="form-control pull-right"
+                                       type="text" id="name" value="${model.name!""}">
+                                <input type="text" class="form-control pull-right" id="reservation">
+                            </div>
+                            <textarea required id="description" rows="10"
+                                      cols="80">${model.description!"описание экспозиции"}</textarea>
                             <input class="btn btn-sm btn-primary" type="submit" value="Сохранить" id="submit">
+
                         </form>
                     </div>
                     <!-- /.box -->
@@ -71,9 +62,28 @@
 </div>
 <!-- ./wrapper -->
 <@scripts/>
+<!-- CK Editor -->
+<script src="/bower_components/ckeditor/ckeditor.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<!-- date-range-picker -->
+<script src="/bower_components/moment/min/moment.min.js"></script>
+<script src="/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap datepicker -->
+<script src="/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="/plugins/timepicker/bootstrap-timepicker.min.js"></script>
 <script>
     $(function () {
         CKEDITOR.replace('description');
+    })
+</script>
+<script>
+    //Date range picker
+    $('#reservation').daterangepicker({locale: {format: 'DD/MM/YYYY'}});
+    //Date picker
+    $('#datepicker').datepicker({
+        autoclose: true
     })
 </script>
 <script>
@@ -85,7 +95,7 @@
             var id = $("#id").val();
             exposition["id"] = id;
             exposition["name"] = $("#name").val();
-            exposition["description"] = $("#description").val();
+            exposition["description"] = CKEDITOR.instances['description'].getData();
             $("#submit").prop("disabled", true);
             var ajax_url = id == "" ? "/rest/expositions/add" : "/rest/expositions/" + id + "/edit";
             $.ajax({

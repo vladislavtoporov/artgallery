@@ -1,9 +1,9 @@
 package ru.kpfu.itis.artgallery.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,17 +33,21 @@ public class RegistrationController {
 
     @PostMapping(value = "/signUp")
     public String signUp(@Valid @ModelAttribute("userForm") UserRegistrationForm userRegistrationForm,
-                         BindingResult errors, RedirectAttributes attributes) {
+                         Model model, BindingResult errors, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
-            attributes.addFlashAttribute("error", errors.getAllErrors().get(0).getDefaultMessage());
-            return "redirect:/signUp";
+            attributes.addFlashAttribute("/error", errors.getAllErrors().get(0).getDefaultMessage());
+            model.addAttribute("failReg", "fail");
+            model.addAttribute("user", userRegistrationForm);
+            return "signIn";
         }
         userService.register(userRegistrationForm);
+
         return "redirect:/signIn";
     }
 
-    @GetMapping(value = "/signUp")
-    public String getSignUpPage() {
-        return "sign_up";
-    }
+//    @GetMapping(value = "/signUp/error")
+//    public String getSignUpPage(Model model) {
+//        model.addAttribute("failReg", true);
+//        return "signIn";
+//    }
 }

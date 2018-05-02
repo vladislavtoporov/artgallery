@@ -55,7 +55,7 @@ public class Exhibit {
 
     @JsonIgnore
     @OneToMany(mappedBy = "exhibit")
-    private Set<Image> images;
+    private Set<File> images;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

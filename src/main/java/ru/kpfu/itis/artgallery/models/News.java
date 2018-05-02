@@ -19,7 +19,7 @@ import java.sql.Timestamp;
 public class News {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
-    protected User user;
+    private User user;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_id_seq")
     @SequenceGenerator(name = "news_id_seq", sequenceName = "news_id_seq", allocationSize = 1)

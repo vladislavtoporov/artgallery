@@ -28,9 +28,9 @@ import javax.sql.DataSource;
 @ComponentScan("ru.kpfu.itis.artgallery")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final ConnectionFactoryLocator connectionFactoryLocator;
-    private final UsersConnectionRepository usersConnectionRepository;
-    private final SocialConnectionSignup socialConnectionSignup;
+    private ConnectionFactoryLocator connectionFactoryLocator;
+    private UsersConnectionRepository usersConnectionRepository;
+    private SocialConnectionSignup socialConnectionSignup;
     private UserDetailsService userDetailsService;
     private AuthenticationService authenticationService;
     private DataSource dataSource;
@@ -44,6 +44,49 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.usersConnectionRepository = usersConnectionRepository;
         this.socialConnectionSignup = socialConnectionSignup;
     }
+
+//    @Bean
+//    @Scope(value = "singleton", proxyMode = ScopedProxyMode.INTERFACES)
+//    public ConnectionFactoryLocator connectionFactoryLocator() {
+//        ConnectionFactoryRegistry registry = new ConnectionFactoryRegistry();
+//        registry.addConnectionFactory(new FacebookConnectionFactory(
+//                "2099439913406356",
+//                "71aa9054670830a21ed3b359703b81f2"));
+//        registry.addConnectionFactory(new TwitterConnectionFactory(
+//                "YyWOLJ4zabQ9GoGwETjbm8E2L",
+//                "eVfznnXmgCem27wqAw88cN70b2xljg86KtNjUDQXPBINTLKSMr"));
+////                environment.getProperty("netflix.consumerKey"),
+////                environment.getProperty("netflix.consumerSecret")));
+//        return registry;
+//    }
+//
+//    @Bean
+//    public ConnectController connectController() {
+//        return new ConnectController(connectionFactoryLocator(), connectionRepository());
+//    }
+//
+//    @Bean
+//    @Scope(value="singleton", proxyMode=ScopedProxyMode.INTERFACES)
+//    public UsersConnectionRepository usersConnectionRepository() {
+//        return new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator(), Encryptors.noOpText());
+//    }
+//
+//    @Bean
+//    @Scope(value="request", proxyMode=ScopedProxyMode.INTERFACES)
+//    public ConnectionRepository connectionRepository() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null) {
+//            throw new IllegalStateException("Unable to get a ConnectionRepository: no user signed in");
+//        }
+//        return usersConnectionRepository().createConnectionRepository(authentication.getName());
+//    }
+//
+//    @Bean
+//    @Scope(value="request", proxyMode=ScopedProxyMode.INTERFACES)
+//    public TwitterApiHelper twitter() {
+//        Connection<TwitterApiHelper> twitter = connectionRepository().findPrimaryConnection(TwitterApiHelper.class);
+//        return twitter != null ? twitter.getApi() : null;
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -63,7 +106,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("login")
                 .defaultSuccessUrl("/")
                 .loginProcessingUrl("/login")
-                .failureUrl("/signIn?error")
+                .failureUrl("/signIn/error")
                 .permitAll()
 
                 .and()

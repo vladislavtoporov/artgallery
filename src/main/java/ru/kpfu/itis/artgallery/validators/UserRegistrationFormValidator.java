@@ -31,10 +31,17 @@ public class UserRegistrationFormValidator implements Validator {
         Optional<User> existedUser = usersRepository.findOneByLogin(form.getLogin());
 
         if (existedUser.isPresent()) {
-            errors.reject("bad.login", "Логин занят");
+            errors.reject("bad.login", "Email занят");
         }
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "login", "empty.login", "Пустой login");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "empty.name", "Пустой nickname");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "login", "empty.login", "Пустой email");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "empty.password", "Пустой пароль");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "passwordRepeat", "empty.password", "Пустой пароль");
+
+        if (!form.getPassword().equals(form.getPasswordRepeat())) {
+            errors.reject("bad.login", "Пароли не совпадают");
+        }
+        System.out.println("success validation");
     }
 }

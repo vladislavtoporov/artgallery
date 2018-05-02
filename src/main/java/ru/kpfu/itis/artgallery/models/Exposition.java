@@ -36,10 +36,8 @@ public class Exposition {
     @Column(columnDefinition = "INT DEFAULT 0")
     private Integer price;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp start;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp finish;
 
     @OneToMany(mappedBy = "exposition")

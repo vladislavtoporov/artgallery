@@ -3,27 +3,8 @@
 <html>
 <head>
 <@head/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="/bower_components/Ionicons/css/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="/dist/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. Choose a skin from the css/skins
-         folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="/dist/css/skins/_all-skins.min.css">
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
-
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -51,10 +32,10 @@
                     <!-- tools box -->
                 <#--<div class="pull-right box-tools">-->
                 <#--<button type="button" class="btn btn-info btn-sm" data-widget="collapse" data-toggle="tooltip"-->
-                <#--title="Collapse">-->
+                <#--name="Collapse">-->
                 <#--<i class="fa fa-minus"></i></button>-->
                 <#--<button type="button" class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip"-->
-                <#--title="Remove">-->
+                <#--name="Remove">-->
                 <#--<i class="fa fa-times"></i></button>-->
                 <#--</div>-->
                     <!-- /. tools -->
@@ -63,13 +44,14 @@
                     <div class="box-body pad">
                         <div id="feedback"></div>
                         <form id="exhibit-form">
-                        <#if model??>
                             <input type="hidden" id="id" value="${model.id!""}">
+                        <#if model.exposition??>
                             <input type="hidden" id="exp-id" value="${model.exposition.id!""}">
-                            <input type="text" id="name" value="${model.name!""}">
-                            <textarea id="content" rows="10" cols="80">${model.content!""}</textarea>
                         </#if>
-                            <select id="exposition_id">
+                            <input required pattern=".+" type="text" id="name" value="${model.name!""}">
+                            <textarea required id="content" rows="10" cols="80">${model.content!""}</textarea>
+
+                            <select required id="exposition_id">
                             <#list expositions as e>
                                 <option value="${e.id}" id="${e.id}">${e.name}</option>
                             </#list>
@@ -90,6 +72,10 @@
 </div>
 <!-- ./wrapper -->
 <@scripts/>
+<!-- CK Editor -->
+<script src="/bower_components/ckeditor/ckeditor.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <script>
     document.getElementById('exposition_id').value = $("#exp-id").val();
 </script>
@@ -107,7 +93,7 @@
             var id = $("#id").val();
             exhibit["id"] = id;
             exhibit["name"] = $("#name").val();
-            exhibit["content"] = $("#content").val();
+            exhibit["content"] = CKEDITOR.instances['content'].getData();
             var e = document.getElementById("exposition_id");
             exhibit["expositionId"] = e.options[e.selectedIndex].value;
             $("#submit").prop("disabled", true);

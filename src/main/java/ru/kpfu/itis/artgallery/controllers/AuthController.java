@@ -2,15 +2,16 @@ package ru.kpfu.itis.artgallery.controllers;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PostMapping;
 import ru.kpfu.itis.artgallery.providers.AuthProvider;
 import ru.kpfu.itis.artgallery.services.AuthenticationService;
 import ru.kpfu.itis.artgallery.validators.LoginFormValidator;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Controller
 public class AuthController {
@@ -30,12 +31,16 @@ public class AuthController {
     }
 
     @GetMapping("/signIn")
-    public String login(@ModelAttribute("model") ModelMap model, Authentication authentication,
-                        @RequestParam Optional<String> error) {
+    public String login(Authentication authentication) {
         if (authentication != null) {
             return "redirect:/";
         }
-        model.addAttribute("error", error);
+        return "signIn";
+    }
+
+    @GetMapping("/signIn/error")
+    public String error(Model model) {
+        model.addAttribute("error", "Неправильный логин или пароль");
         return "signIn";
     }
 

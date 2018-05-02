@@ -3,11 +3,11 @@ package ru.kpfu.itis.artgallery.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import ru.kpfu.itis.artgallery.enums.Role;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import java.io.Serializable;
 import java.util.Set;
 
 @Getter
@@ -19,7 +19,9 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class User implements Serializable {
+@DynamicUpdate
+@DynamicInsert
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
     @SequenceGenerator(name = "users_id_seq", sequenceName = "users_id_seq", allocationSize = 1)
@@ -27,10 +29,7 @@ public class User implements Serializable {
     @Column(length = 50, nullable = false)
     private String name;
 
-//    @Column(length = 50)
-//    private String login;
-
-    @Email
+    //    @Email
     @JsonIgnore
     @Column(unique = true, length = 50, nullable = false)
     private String login;

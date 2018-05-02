@@ -1,10 +1,13 @@
 package ru.kpfu.itis.artgallery.models;
 
+import com.cloudinary.StoredFile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -12,32 +15,61 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Entity()
+@DynamicInsert
 public class File {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "file_id_seq")
-    @SequenceGenerator(name = "file_id_seq", sequenceName = "file_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "origin_name", length = 50)
-    private String originName;
+    @Basic
+    private String name;
+    @Column(length = 10)
+    private String contentType;
 
-    @Column(length = 50)
-    private String path;
+    @Basic
+    private String file;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ticket_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "message_id", nullable = false)
-    private PrivateMessage message;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "exhibit_id", nullable = false)
+    @JoinColumn(name = "message_id")
+    private PrivateMessage message;
+
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exhibit_id")
     private Exhibit exhibit;
+
+    @Basic
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp ts;
+
+    public StoredFile getUpload() {
+        StoredFile file = new StoredFile();
+        file.setPreloadedFile(this.file);
+        return file;
+    }
+
+    public void setUpload(StoredFile file) {
+        this.file = file.getPreloadedFile();
+    }
+
+    public String getFullPath() {
+        String hosting = "http://res.cloudinary.com/mt21/";
+        return hosting + file;
+    }
+
 }

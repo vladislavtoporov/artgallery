@@ -1,12 +1,15 @@
 package ru.kpfu.itis.artgallery.controllers;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.kpfu.itis.artgallery.enums.Role;
 import ru.kpfu.itis.artgallery.forms.AjaxForm;
 import ru.kpfu.itis.artgallery.forms.ExhibitForm;
 import ru.kpfu.itis.artgallery.forms.ExpositionForm;
+import ru.kpfu.itis.artgallery.forms.UserForm;
 import ru.kpfu.itis.artgallery.models.*;
 import ru.kpfu.itis.artgallery.repositories.*;
 import ru.kpfu.itis.artgallery.services.AuthenticationService;
@@ -23,6 +26,7 @@ public class EntityRestController {
     private TopicRepository topicRepository;
     private UserRepository userRepository;
     private AuthenticationService authenticationService;
+    private static final Logger log = Logger.getLogger(EntityRestController.class);
 
     @Autowired
     public EntityRestController(ExhibitRepository exhibitRepository, ExpositionRepository expositionRepository, NewsRepository newsRepository, PostRepository postRepository, TopicRepository topicRepository, UserRepository userRepository, AuthenticationService authenticationService) {
@@ -37,11 +41,13 @@ public class EntityRestController {
 
     @GetMapping(value = "/exhibits")
     public List exhibitGetAll() {
+        log.info("exhibitGetAll is executed");
         return exhibitRepository.findAll();
     }
 
     @GetMapping(value = "/exhibits/{id}")
     public Exhibit exhibitGetById(@PathVariable("id") Long id) {
+        log.info("exhibitGetById is executed");
         return exhibitRepository.getOne(id);
     }
 
@@ -49,6 +55,7 @@ public class EntityRestController {
     @PostMapping(value = "/exhibits/add")
     public ResponseEntity<?> exhibitAdd(@RequestBody ExhibitForm exhibitForm,
                                         Authentication authentication) {
+        log.info("exhibitAdd is executed");
         AjaxForm result = new AjaxForm();
         Exposition exposition = expositionRepository.getOne(exhibitForm.getExpositionId());
         User author = authenticationService.getUserByAuthentication(authentication);
@@ -58,6 +65,7 @@ public class EntityRestController {
             exhibitRepository.save(exhibit);
             result.setMsg("success");
         } catch (Exception e) {
+            log.error("exhibitAdd error", e);
             result.setMsg("badRequest");
 
         }
@@ -68,7 +76,7 @@ public class EntityRestController {
     @PostMapping(value = "/exhibits/{id}/edit")
     public ResponseEntity<?> exhibitEdit(@RequestBody ExhibitForm exhibitForm,
                                          Authentication authentication) {
-
+        log.info("exhibitAdd is executed");
         AjaxForm result = new AjaxForm();
         Exposition exposition = expositionRepository.getOne(exhibitForm.getExpositionId());
         User author = authenticationService.getUserByAuthentication(authentication);
@@ -81,6 +89,7 @@ public class EntityRestController {
             exhibitRepository.save(exhibit);
             result.setMsg("success");
         } catch (Exception e) {
+            log.error("exhibitAdd error", e);
             result.setMsg("badRequest");
         }
         return ResponseEntity.ok(result);
@@ -169,21 +178,48 @@ public class EntityRestController {
     }
 
     @PostMapping(value = "news/add")
-    public String newsAdd(News news) {
-        newsRepository.save(news);
-        return "redirect:/rest/news";
+    public ResponseEntity<?> newsAdd(@RequestBody News news, Authentication authentication) {
+        AjaxForm result = new AjaxForm();
+        User user = authenticationService.getUserByAuthentication(authentication);
+        news.setUser(user);
+        try {
+            newsRepository.save(news);
+            result.setMsg("success");
+        } catch (Exception e) {
+            result.setMsg("badRequest");
+        }
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping(value = "news/{id}/edit")
-    public String newsEdit(News news) {
-        newsRepository.save(news);
-        return "redirect:/rest/news";
+    public ResponseEntity<?> newsEdit(@RequestBody News newsForm,
+                                      @PathVariable Long id,
+                                      Authentication authentication) {
+        AjaxForm result = new AjaxForm();
+        User user = authenticationService.getUserByAuthentication(authentication);
+        News news = newsRepository.getOne(id);
+        news.setPreview(newsForm.getPreview());
+        news.setContent(newsForm.getContent());
+        news.setUser(user);
+        try {
+            newsRepository.save(news);
+            result.setMsg("success");
+        } catch (Exception e) {
+            result.setMsg("badRequest");
+        }
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping(value = "news/{id}/delete")
-    public String newsDelete(@PathVariable("id") Long id) {
-        expositionRepository.delete(id);
-        return "redirect:/rest/news";
+    public ResponseEntity<?> newsDelete(@PathVariable("id") Long id) {
+        AjaxForm result = new AjaxForm();
+        try {
+            newsRepository.delete(id);
+            result.setMsg("success");
+        } catch (Exception e) {
+            result.setMsg("badRequest");
+        }
+        return ResponseEntity.ok(result);
     }
 
     ///
@@ -211,9 +247,15 @@ public class EntityRestController {
     }
 
     @PostMapping(value = "topics/{id}/delete")
-    public String topicDelete(@PathVariable("id") Long id) {
-        topicRepository.delete(id);
-        return "redirect:/rest/topics";
+    public ResponseEntity<?> topicDelete(@PathVariable("id") Long id) {
+        AjaxForm result = new AjaxForm();
+        try {
+            topicRepository.delete(id);
+            result.setMsg("success");
+        } catch (Exception e) {
+            result.setMsg("badRequest");
+        }
+        return ResponseEntity.ok(result);
     }
 
     ///
@@ -241,9 +283,15 @@ public class EntityRestController {
     }
 
     @PostMapping(value = "posts/{id}/delete")
-    public String postDelete(@PathVariable("id") Long id) {
-        postRepository.delete(id);
-        return "redirect:/rest/posts";
+    public ResponseEntity<?> postDelete(@PathVariable("id") Long id) {
+        AjaxForm result = new AjaxForm();
+        try {
+            postRepository.delete(id);
+            result.setMsg("success");
+        } catch (Exception e) {
+            result.setMsg("badRequest");
+        }
+        return ResponseEntity.ok(result);
     }
 
     ///
@@ -259,21 +307,37 @@ public class EntityRestController {
     }
 
     @PostMapping(value = "users/add")
-    public String userAdd(User user) {
-        userRepository.save(user);
-        return "redirect:/rest/users";
+    public String userAdd(@RequestBody User user) {
+        return "not allowed";
     }
 
     @PostMapping(value = "users/{id}/edit")
-    public String userEdit(User user) {
-        userRepository.save(user);
-        return "redirect:/rest/users";
+    public ResponseEntity<?> userEdit(@RequestBody UserForm userForm, @PathVariable Long id) {
+        AjaxForm result = new AjaxForm();
+        User user = userRepository.getOne(id);
+        System.out.println(userForm.getRole());
+        user.setRole(Role.valueOf(userForm.getRole().toUpperCase()));
+        System.out.println(user);
+        try {
+            userRepository.save(user);
+            result.setMsg("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setMsg("badRequest");
+        }
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping(value = "users/{id}/delete")
-    public String userDelete(@PathVariable("id") Long id) {
-        userRepository.delete(id);
-        return "redirect:/rest/users";
+    public ResponseEntity<?> userDelete(@PathVariable("id") Long id) {
+        AjaxForm result = new AjaxForm();
+        try {
+            userRepository.delete(id);
+            result.setMsg("success");
+        } catch (Exception e) {
+            result.setMsg("badRequest");
+        }
+        return ResponseEntity.ok(result);
     }
 
 }
