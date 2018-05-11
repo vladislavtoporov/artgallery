@@ -4,7 +4,6 @@
 <head>
 <@head/>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/owlcarousel/owl.theme.default.min.css">
     <link rel="stylesheet" href="/owlcarousel/owl.theme.green.min.css">
     <link rel="stylesheet" href="/owlcarousel/owl.carousel.min.css">
@@ -13,67 +12,41 @@
 
 <@nav/>
 
-<div class="container space">
+<div class="container-fluid space">
     <div class="row">
         <div class="col-lg-9">
             <div class="well">
                 <div class="row">
-                    <div class="col-lg-9">
-                        <div class="row">
-                            <div class="col-lg-5">
-                                <img src="/img/portfolio_03.jpg" width="240" height="240">
-                            </div>
-                            <div class="col-lg-7 text-center" style="margin: auto">
-                                <h2>${model.name!""}</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque, dignissimos quo.
-                                    Animi nobis optio qui veniam? Ad atque aut, consequatur earum excepturi fugiat
-                                    ipsam, ipsum laborum nemo soluta tempora voluptates.</p>
-                            </div>
-                        </div>
-
-                    <#--<div class="container">-->
-                    <#--<h4>Услуги и цены</h4>-->
-                    <#--<div class="row">-->
-                    <#--<div class="col-lg-6 text-left">-->
-                    <#--<p>Полы</p>-->
-                    <#--<p>Укладка ламината</p>-->
-                    <#--</div>-->
-                    <#--<div class="col-lg-6 text-right">-->
-                    <#--<p>по договоренности</p>-->
-                    <#--<p>по договоренности</p>-->
-                    <#--</div>-->
-                    <#--</div>-->
-                    <#--<h4>Опыт</h4>-->
-                    <#--<p>Опыт работы – с 2012 года</p>-->
-                    <#--</div>-->
-
+                    <div class="col-lg-6">
+                        <img src="/img/portfolio_03.jpg" width="240" height="240">
                     </div>
 
-                    <div class="col-lg-3 " style="margin: auto">
-                        <div class="lobster">
-                            <h4 class="text-center">Рейтинг 5++</h4>
-                            <h4 class="text-center">138 отзывов</h4>
-                        </div>
-                        <h6><i class="fa fa-check"></i> Работает по договору</h6>
-                        <h6><i class="fa fa-check"></i> Даёт гарантию</h6>
-                        <h6><i class="fa fa-check"></i> Собеседование пройдено</h6>
-                        <h6><i class="fa fa-check"></i> Данные проверены</h6>
+                    <div class="col-lg-6 lobster text-center" style="margin: auto">
+                        <h2>${model.name!""}</h2>
+                        <h4>Автор: ${model.owner.name!""}</h4>
+                        <h4 class="text-center">Цена ${model.price} ₽</h4>
+                        <h4 class="text-center">Рейтинг 5.00</h4>
+                        <h4 class="text-right">Открытие экспозиции ${model.start}</h4>
+                        <h4 class="text-right">Закрытие экспозиции ${model.finish}</h4>
+
                     </div>
                 </div>
 
                 <div class="container space owl-carousel owl-theme">
-                    <div class="item"><img src="/img/portfolio_01.jpg"></div>
-                    <div class="item"><img src="/img/portfolio_02.jpg"></div>
-                    <div class="item"><img src="/img/portfolio_03.jpg"></div>
-                    <div class="item"><img src="/img/portfolio_04.jpg"></div>
-                    <div class="item"><img src="/img/portfolio_05.jpg"></div>
-                    <div class="item"><img src="/img/portfolio_06.jpg"></div>
-                    <div class="item"><img src="/img/portfolio_07.jpg"></div>
+                <#list model.exhibits as exhibit>
+                    <#list exhibit.images as img>
+                        <#if img.content_type?? && img.content_type == "image">
+                            <div class="item"><img src="${img.getFullPath()}" alt="${img.name}"></div>
+                        </#if>
+                    </#list>
+                </#list>
                 </div>
+                <hr align="center" width="100%" size="1" color="#fafafa"/>
 
                 <div class="container lobster">
                 ${model.description!""}
                 </div>
+                <hr align="center" width="100%" size="1" color="#fafafa"/>
                 <div class="container lobster">
                     <h3 class="text-center">Отзывы</h3>
                     <hr align="center" width="100%" size="1" color="#fafafa"/>
@@ -125,7 +98,7 @@
 
         <div class="col-lg-3 text-center">
             <div class="well lobster">
-                <h3>Возможно вас заинтересуют</h3>
+                <h3>Похожие экспозиции</h3>
                 <div>
                     <hr align="center" width="100%" size="1" color="#fafafa"/>
                     <a href="#">

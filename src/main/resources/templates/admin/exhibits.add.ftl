@@ -51,6 +51,19 @@
                         </form>
 
                     <#if model.id??>
+                        <div class="feedback"></div>
+                        <div id="uploaded">
+                            <form action="" id="fileForm">
+                                <button type="submit" class="btn btn-primary btn-lg"></button>
+                            </form>
+                            <ul>
+                                <#list files as file>
+                                    <li id="li-${file.id}"><input type="checkbox" name="checkboxes"
+                                                                  id="file-${file.id}"><a
+                                            href="${file.getFullPath()}">${file.name}</a></li>
+                                </#list>
+                            </ul>
+                        </div>
                         <form id="form1" enctype="multipart/form-data" method="post" action="/upload">
                             <input placeholder="Enter file name" class="form-control pull-right" type="text"
                                    name="originName"
@@ -179,7 +192,8 @@
     }
 
     function uploadComplete(evt) {
-        /* This event is raised when the server send back a response */
+//        var filename = $('#originName');
+//        $("#uploaded ul").append('<li><input type="checkbox" id="checkbox-"' +  filename + '><a href="/user/messages"></a></li>');
     }
 
     function uploadFailed(evt) {
@@ -189,6 +203,47 @@
     function uploadCanceled(evt) {
         alert("The upload has been canceled by the user or the browser dropped the connection.");
     }
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#fileForm").submit(function (event) {
+            event.preventDefault();
+            $('#feedback').html("");
+            var checkboxes = document.getElementsByName('checkboxes');
+            for (var i = 0; i < checkboxes.length; i++)
+                if (checkboxes[i].checked) {
+                    var id = checkboxes[i].id.substring(5);
+                    var ajax_url = "/rest/files/" + id + "/delete";
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json",
+                        url: ajax_url,
+                        data: JSON.stringify({}),
+                        dataType: 'json',
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                            var json = "<h4>Ajax Response</h4><pre>"
+                                    + JSON.stringify(data, null, 4) + "</pre>";
+                            $('#feedback').html(json);
+                            console.log("SUCCESS : ", data);
+                            $('#li-' + id).remove();
+                            $("#submit").prop("disabled", false);
+                        },
+                        error: function (e) {
+                            var json = "<h4>Ajax Response</h4><pre>"
+                                    + e.responseText + "</pre>";
+                            $('#feedback').html(json);
+                            console.log("ERROR : ", e);
+                            $("#submit").prop("disabled", false);
+                        }
+                    });
+                }
+            $("#submit").prop("disabled", true);
+        });
+    });
 </script>
 </body>
 </html>

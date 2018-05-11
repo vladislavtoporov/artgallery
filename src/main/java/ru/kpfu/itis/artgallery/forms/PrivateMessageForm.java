@@ -10,11 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class ExpositionForm {
-    private Long id;
-    private String name;
-    private String description;
-    private String start;
-    private String finish;
-
+public class PrivateMessageForm {
+    private String recipient;
+    private String content;
+    private String header;
 }

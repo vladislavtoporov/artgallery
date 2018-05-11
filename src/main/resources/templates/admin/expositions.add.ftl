@@ -40,7 +40,8 @@
                             <input type="hidden" id="id" value="${model.id!""}">
                             <input placeholder="название" required pattern=".+" class="form-control pull-right"
                                    type="text" id="name" value="${model.name!""}">
-                            <input type="text" class="form-control pull-right" id="reservation">
+                            <input type="text" class="form-control pull-right" id="reservation"
+                                   value="${model.getRange()}">
                             <textarea required id="description" rows="10"
                                       cols="80">${model.description!"описание экспозиции"}</textarea>
                             <div class="text-center">
@@ -80,7 +81,7 @@
 </script>
 <script>
     //Date range picker
-    $('#reservation').daterangepicker({locale: {format: 'DD/MM/YYYY'}});
+    $('#reservation').daterangepicker({locale: {format: 'YYYY.MM.DD'}});
     //Date picker
     $('#datepicker').datepicker({
         autoclose: true
@@ -95,6 +96,11 @@
             var id = $("#id").val();
             exposition["id"] = id;
             exposition["name"] = $("#name").val();
+            var date = $("#reservation").val().split(" - ");
+            exposition["start"] = date[0];
+            exposition["finish"] = date[1];
+            alert(exposition["start"]);
+            alert(exposition["finish"]);
             exposition["description"] = CKEDITOR.instances['description'].getData();
             $("#submit").prop("disabled", true);
             var ajax_url = id == "" ? "/rest/expositions/add" : "/rest/expositions/" + id + "/edit";

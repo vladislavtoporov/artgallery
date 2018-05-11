@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"user", "ticket", "message", "exhibit"})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity()
 @DynamicInsert

@@ -47,7 +47,7 @@
                         <div class="box-body no-padding">
                             <ul class="nav nav-pills nav-stacked">
                                 <li><a href="mailbox.html"><i class="fa fa-inbox"></i> Inbox
-                                    <span class="label label-primary pull-right">12</span></a></li>
+                                    <span class="label label-primary pull-right">0</span></a></li>
                                 <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
                                 <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
                                 <li><a href="#"><i class="fa fa-filter"></i> Junk <span
@@ -69,13 +69,13 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="box-body no-padding">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#"><i class="fa fa-circle-o text-red"></i> Important</a></li>
-                                <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Promotions</a></li>
-                                <li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Social</a></li>
-                            </ul>
-                        </div>
+                    <#--<div class="box-body no-padding">-->
+                    <#--<ul class="nav nav-pills nav-stacked">-->
+                    <#--<li><a href="#"><i class="fa fa-circle-o text-red"></i> Important</a></li>-->
+                    <#--<li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Promotions</a></li>-->
+                    <#--<li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Social</a></li>-->
+                    <#--</ul>-->
+                    <#--</div>-->
                         <!-- /.box-body -->
                     </div>
                     <!-- /.box -->
@@ -96,9 +96,9 @@
                         <!-- /.box-header -->
                         <div class="box-body no-padding">
                             <div class="mailbox-read-info">
-                                <h3>Message Subject Is Placed Here</h3>
-                                <h5>From: help@example.com
-                                    <span class="mailbox-read-time pull-right">15 Feb. 2016 11:03 PM</span></h5>
+                                <h3>${model.header}</h3>
+                                <h5>From: ${model.sender.login}
+                                    <span class="mailbox-read-time pull-right">${model.ts}</span></h5>
                             </div>
                             <!-- /.mailbox-read-info -->
                             <div class="mailbox-controls with-border text-center">
@@ -120,6 +120,7 @@
                             </div>
                             <!-- /.mailbox-controls -->
                             <div class="mailbox-read-message">
+                            ${model.content}
                             </div>
                             <!-- /.mailbox-read-message -->
                         </div>
@@ -134,7 +135,6 @@
                                             Sep2014-report.pdf</a>
                                         <a href="#" class="btn btn-default btn-xs pull-right"><i
                                                 class="fa fa-cloud-download"></i></a>
-                                        </span>
                                     </div>
                                 </li>
                             </ul>

@@ -5,10 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.format.annotation.DateTimeFormat;
 import ru.kpfu.itis.artgallery.forms.ExpositionForm;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Set;
 
 @Getter
@@ -36,9 +39,11 @@ public class Exposition {
     @Column(columnDefinition = "INT DEFAULT 0")
     private Integer price;
 
-    private Timestamp start;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date start;
 
-    private Timestamp finish;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date finish;
 
     @OneToMany(mappedBy = "exposition")
     private Set<Exhibit> exhibits;
@@ -56,5 +61,17 @@ public class Exposition {
         this.name = expositionForm.getName();
         this.description = expositionForm.getDescription();
         this.owner = owner;
+
+        String[] startArray = expositionForm.getStart().split("/");
+        int[] startValue = Arrays.stream(startArray).mapToInt(Integer::parseInt).toArray();
+        String[] finishArray = expositionForm.getFinish().split("/");
+        int[] finishValue = Arrays.stream(finishArray).mapToInt(Integer::parseInt).toArray();
+
+        this.start = Date.valueOf(LocalDate.of(startValue[0], startValue[1], startValue[2]));
+        this.finish = Date.valueOf(LocalDate.of(finishValue[0], finishValue[1], finishValue[2]));
+    }
+
+    public String getRange() {
+        return start.toString() + " - " + finish.toString();
     }
 }

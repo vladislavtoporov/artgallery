@@ -3,6 +3,7 @@ package ru.kpfu.itis.artgallery.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import ru.kpfu.itis.artgallery.forms.PrivateMessageForm;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -27,6 +28,9 @@ public class PrivateMessage {
     @Column(length = 500)
     private String content;
 
+    @Column(length = 100)
+    private String header;
+
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp ts;
 
@@ -41,4 +45,10 @@ public class PrivateMessage {
     @OneToMany(mappedBy = "message")
     private Set<File> files;
 
+    public PrivateMessage(PrivateMessageForm privateMessageForm, User sender, User recipient) {
+        this.setContent(privateMessageForm.getContent());
+        this.setSender(sender);
+        this.setRecipient(recipient);
+        this.setHeader(privateMessageForm.getHeader());
+    }
 }

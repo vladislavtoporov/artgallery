@@ -18,7 +18,7 @@
         <section class="content-header">
             <h1>
                 Mailbox
-                <small>13 new messages</small>
+                <small>no new messages</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -45,7 +45,7 @@
                         <div class="box-body no-padding">
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox
-                                    <span class="label label-primary pull-right">12</span></a></li>
+                                    <span class="label label-primary pull-right">0</span></a></li>
                                 <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
                                 <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
                                 <li><a href="#"><i class="fa fa-filter"></i> Junk <span
@@ -67,13 +67,13 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="box-body no-padding">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#"><i class="fa fa-circle-o text-red"></i> Important</a></li>
-                                <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Promotions</a></li>
-                                <li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Social</a></li>
-                            </ul>
-                        </div>
+                    <#--<div class="box-body no-padding">-->
+                    <#--<ul class="nav nav-pills nav-stacked">-->
+                    <#--<li><a href="#"><i class="fa fa-circle-o text-red"></i> Important</a></li>-->
+                    <#--<li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Promotions</a></li>-->
+                    <#--<li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Social</a></li>-->
+                    <#--</ul>-->
+                    <#--</div>-->
                         <!-- /.box-body -->
                     </div>
                     <!-- /.box -->
@@ -125,15 +125,18 @@
                             <div class="table-responsive mailbox-messages">
                                 <table class="table table-hover table-striped">
                                     <tbody>
+                                    <#list model as me>
                                     <tr>
                                         <td><input type="checkbox"></td>
                                         <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a>
                                         </td>
-                                        <td class="mailbox-name"><a href="read-mail.html">Name</a></td>
-                                        <td class="mailbox-subject">Subject</td>
+                                        <td class="mailbox-name"><a
+                                                href="/admin/readMail/${me.id}">${me.sender.name}</a></td>
+                                        <td class="mailbox-subject">${me.content}</td>
                                     <#--<td class="mailbox-attachment"><i class="fa fa-paperclip"></i></td>-->
-                                        <td class="mailbox-date">5 mins ago</td>
+                                        <td class="mailbox-date">${me.ts}</td>
                                     </tr>
+                                    </#list>
                                     </tbody>
                                 </table>
                                 <!-- /.table -->

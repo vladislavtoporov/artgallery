@@ -20,7 +20,7 @@
         <section class="content-header">
             <h1>
                 Mailbox
-                <small>13 new messages</small>
+                <small>no new messages</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -32,7 +32,7 @@
         <section class="content">
             <div class="row">
                 <div class="col-md-3">
-                    <a href="mailbox.html" class="btn btn-primary btn-block margin-bottom">Back to Inbox</a>
+                    <a href="/admin/mailbox" class="btn btn-primary btn-block margin-bottom">Back to Inbox</a>
 
                     <div class="box box-solid">
                         <div class="box-header with-border">
@@ -46,8 +46,8 @@
                         </div>
                         <div class="box-body no-padding">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="mailbox.html"><i class="fa fa-inbox"></i> Inbox
-                                    <span class="label label-primary pull-right">12</span></a></li>
+                                <li><a href="/admin/mailbox"><i class="fa fa-inbox"></i> Inbox
+                                    <span class="label label-primary pull-right">0</span></a></li>
                                 <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
                                 <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
                                 <li><a href="#"><i class="fa fa-filter"></i> Junk <span
@@ -70,13 +70,13 @@
                             </div>
                         </div>
                         <!-- /.box-header -->
-                        <div class="box-body no-padding">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#"><i class="fa fa-circle-o text-red"></i> Important</a></li>
-                                <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Promotions</a></li>
-                                <li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Social</a></li>
-                            </ul>
-                        </div>
+                    <#--<div class="box-body no-padding">-->
+                    <#--<ul class="nav nav-pills nav-stacked">-->
+                    <#--<li><a href="#"><i class="fa fa-circle-o text-red"></i> Important</a></li>-->
+                    <#--<li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Promotions</a></li>-->
+                    <#--<li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Social</a></li>-->
+                    <#--</ul>-->
+                    <#--</div>-->
                         <!-- /.box-body -->
                     </div>
                     <!-- /.box -->
@@ -155,9 +155,8 @@
             $('#feedback').html("");
             var message = {};
             message["recipient"] = $("#recipient").val();
-            alert(message["recipient"]);
             message["content"] = $("#compose-textarea").wysihtml5().val();
-            alert(message["content"]);
+            message["header"] = $("#subject").val();
             $("#submit").prop("disabled", true);
             var ajax_url = "/rest/privateMessages/add";
             $.ajax({

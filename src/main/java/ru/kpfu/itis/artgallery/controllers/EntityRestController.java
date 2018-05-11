@@ -1,6 +1,9 @@
 package ru.kpfu.itis.artgallery.controllers;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +26,12 @@ public class EntityRestController {
     private UserRepository userRepository;
     private AuthenticationService authenticationService;
     private PrivateMessageRepository privateMessageRepository;
+    private FileRepository fileRepository;
+    @Value("${CLOUDINARY_URL}")
+    private String CLOUDINARY_URL;
 
     @Autowired
-    public EntityRestController(ExhibitRepository exhibitRepository, ExpositionRepository expositionRepository, NewsRepository newsRepository, PostRepository postRepository, TopicRepository topicRepository, UserRepository userRepository, AuthenticationService authenticationService, PrivateMessageRepository privateMessageRepository) {
+    public EntityRestController(ExhibitRepository exhibitRepository, ExpositionRepository expositionRepository, NewsRepository newsRepository, PostRepository postRepository, TopicRepository topicRepository, UserRepository userRepository, AuthenticationService authenticationService, PrivateMessageRepository privateMessageRepository, FileRepository fileRepository) {
         this.exhibitRepository = exhibitRepository;
         this.expositionRepository = expositionRepository;
         this.newsRepository = newsRepository;
@@ -34,6 +40,7 @@ public class EntityRestController {
         this.userRepository = userRepository;
         this.authenticationService = authenticationService;
         this.privateMessageRepository = privateMessageRepository;
+        this.fileRepository = fileRepository;
     }
 
     @GetMapping(value = "/exhibits")
@@ -111,11 +118,12 @@ public class EntityRestController {
     }
 
     @PostMapping(value = "/expositions/add")
-    public ResponseEntity<?> expositionAdd(@RequestBody Exposition exposition,
+    public ResponseEntity<?> expositionAdd(@RequestBody ExpositionForm expositionForm,
                                            Authentication authentication) {
         AjaxForm result = new AjaxForm();
         User owner = authenticationService.getUserByAuthentication(authentication);
-        exposition.setOwner(owner);
+        Exposition exposition = new Exposition(expositionForm, owner);
+
         try {
             expositionRepository.save(exposition);
             result.setMsg("success");
@@ -135,6 +143,7 @@ public class EntityRestController {
         exposition.setName(expositionForm.getName());
         exposition.setDescription(exposition.getDescription());
         exposition.setOwner(owner);
+
         try {
             expositionRepository.save(exposition);
             result.setMsg("success");
@@ -331,16 +340,30 @@ public class EntityRestController {
         return ResponseEntity.ok(result);
     }
 
+    @PostMapping(value = "files/{id}/delete")
+    public ResponseEntity<?> fileDelete(@PathVariable("id") Long id) {
+        AjaxForm result = new AjaxForm();
+        try {
+            File file = fileRepository.getOne(id);
+            Cloudinary cloudinary = new Cloudinary(CLOUDINARY_URL);
+            cloudinary.uploader().destroy(file.getFile(), ObjectUtils.emptyMap());
+            fileRepository.delete(id);
+            result.setMsg("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setMsg("badRequest");
+        }
+        return ResponseEntity.ok(result);
+    }
+
     @PostMapping(value = "privateMessages/add")
     public ResponseEntity<?> privateMessageAdd(@RequestBody PrivateMessageForm privateMessageForm,
                                                Authentication authentication) {
         AjaxForm result = new AjaxForm();
-        User user = authenticationService.getUserByAuthentication(authentication);
-        PrivateMessage privateMessage = new PrivateMessage();
-        privateMessage.setContent(privateMessageForm.getContent());
-        privateMessage.setSender(user);
         try {
-            privateMessage.setRecipient(userRepository.findOneByLogin(privateMessageForm.getRecipient()).get());
+            User sender = authenticationService.getUserByAuthentication(authentication);
+            User recipient = userRepository.findOneByLogin(privateMessageForm.getRecipient()).get();
+            PrivateMessage privateMessage = new PrivateMessage(privateMessageForm, sender, recipient);
             privateMessageRepository.save(privateMessage);
             result.setMsg("success");
         } catch (Exception e) {

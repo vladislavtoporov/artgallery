@@ -17,6 +17,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"author", "images", "exposition"})
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @DynamicInsert

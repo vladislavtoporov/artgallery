@@ -11,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import ru.kpfu.itis.artgallery.models.File;
 import ru.kpfu.itis.artgallery.models.FileUpload;
 import ru.kpfu.itis.artgallery.models.User;
@@ -35,13 +34,6 @@ public class FileUploadController {
     @Value("${CLOUDINARY_URL}")
     private String CLOUDINARY_URL;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    @ResponseBody
-    public String listPhotos(ModelMap model) {
-        model.addAttribute("photos", fileRepository.findAll());
-        return "photos";
-    }
-
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String uploadPhoto(@ModelAttribute FileUpload fileUpload, BindingResult result,
@@ -54,7 +46,6 @@ public class FileUploadController {
             Cloudinary cloudinary = new Cloudinary(CLOUDINARY_URL);
             uploadResult = cloudinary.uploader().upload(fileUpload.getFile().getBytes(),
                     ObjectUtils.asMap("resource_type", "auto"));
-//            cloudinary.url().generate(user.getName() + "/" + )
             fileUpload.setPublicId((String) uploadResult.get("public_id"));
             Object version = uploadResult.get("version");
             if (version instanceof Integer) {
