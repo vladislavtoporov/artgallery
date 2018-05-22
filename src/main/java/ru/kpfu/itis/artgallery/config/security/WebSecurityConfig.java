@@ -98,7 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .tokenValiditySeconds(1209600);
 
         http.authorizeRequests()
-                .antMatchers("/admin/**").hasAnyAuthority("ADMIN", "STAFF")
+                .antMatchers("/admin/**").hasAnyAuthority("ADMIN", "STAFF", "SUPERVISER", "ARTIST")
                 .antMatchers("/**").permitAll()
 
                 .and()
@@ -114,9 +114,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/signIn")
                 .deleteCookies("JSESSIONID")
-                .permitAll();
+                .permitAll()
 
-        http.csrf().disable();
+                .and()
+                .httpBasic();
+
+
+//        http.csrf().disable();
     }
 
     @Override

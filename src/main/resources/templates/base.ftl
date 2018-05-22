@@ -2,6 +2,8 @@
 <#--${user.getFullAvatarPath()!'-->
     <#assign user_image="/img/portfolio_01.jpg">
 <meta charset="UTF-8">
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!-- Tell the browser to be responsive to screen width -->
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -42,13 +44,13 @@
                     ARTGALLERY</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Экспозиции</a>
+                <a class="nav-link" href="/expositions">Экспозиции</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Экспонаты</a>
+                <a class="nav-link" href="/exhibits">Экспонаты</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Забронировать</a>
+                <a class="nav-link" href="/reservation">Забронировать</a>
             </li>
         </ul>
 
@@ -173,5 +175,14 @@
                 name: 'states',
                 source: substringMatcher(states)
             });
+</script>
+<script>
+    $(function () {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, token);
+        });
+    });
 </script>
 </#macro>

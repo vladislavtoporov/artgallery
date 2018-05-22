@@ -22,6 +22,7 @@ public class SocialConnectionSignup implements ConnectionSignUp {
         final User user = new User();
         user.setName(connection.getDisplayName());
         user.setLogin(connection.fetchUserProfile().getEmail());
+        user.setAvatarPath(connection.getImageUrl());
         user.setPassword(new PasswordGenerator().generate());
         userRepository.save(user);
         return user.getName();

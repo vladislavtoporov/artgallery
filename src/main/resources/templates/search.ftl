@@ -12,7 +12,7 @@
 
 <div class="container-fluid space">
     <form action="/search" method="post" id="querryForm" class="form-inline" style="justify-content: center;">
-
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <input type="text" class="form-control form-control-lg" name="querry" value="${querry!""}"
                style="width: 90%"/>
         <button type="submit" class="btn btn-primary btn-lg">Найти</button>

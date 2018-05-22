@@ -84,7 +84,7 @@
                 <!-- /.col -->
                 <div id="feedback"></div>
                 <form action="" id="message-form">
-                <div class="col-md-9">
+                    <div class="col-md-9">
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title">Compose New Message</h3>

@@ -54,7 +54,7 @@
                         <div class="feedback"></div>
                         <div id="uploaded">
                             <form action="" id="fileForm">
-                                <button type="submit" class="btn btn-primary btn-lg"></button>
+                                <button type="submit" class="btn btn-primary btn-lg">Обновить</button>
                             </form>
                             <ul>
                                 <#list files as file>
@@ -155,6 +155,7 @@
 </script>
 <script type="application/javascript">
     function fileSelected() {
+        $('#progressNumber').css('width', '0%');
         var file = document.getElementById('fileToUpload').files[0];
         if (file) {
             var fileSize = 0;
@@ -215,6 +216,7 @@
             for (var i = 0; i < checkboxes.length; i++)
                 if (checkboxes[i].checked) {
                     var id = checkboxes[i].id.substring(5);
+                    alert(id)
                     var ajax_url = "/rest/files/" + id + "/delete";
                     $.ajax({
                         type: "POST",

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.artgallery.enums.Role;
+import ru.kpfu.itis.artgallery.enums.TicketStatus;
 import ru.kpfu.itis.artgallery.forms.*;
 import ru.kpfu.itis.artgallery.models.*;
 import ru.kpfu.itis.artgallery.repositories.*;
@@ -26,12 +27,13 @@ public class EntityRestController {
     private UserRepository userRepository;
     private AuthenticationService authenticationService;
     private PrivateMessageRepository privateMessageRepository;
+    private TicketRepository ticketRepository;
     private FileRepository fileRepository;
     @Value("${CLOUDINARY_URL}")
     private String CLOUDINARY_URL;
 
     @Autowired
-    public EntityRestController(ExhibitRepository exhibitRepository, ExpositionRepository expositionRepository, NewsRepository newsRepository, PostRepository postRepository, TopicRepository topicRepository, UserRepository userRepository, AuthenticationService authenticationService, PrivateMessageRepository privateMessageRepository, FileRepository fileRepository) {
+    public EntityRestController(ExhibitRepository exhibitRepository, ExpositionRepository expositionRepository, NewsRepository newsRepository, PostRepository postRepository, TopicRepository topicRepository, UserRepository userRepository, AuthenticationService authenticationService, PrivateMessageRepository privateMessageRepository, FileRepository fileRepository, TicketRepository ticketRepository) {
         this.exhibitRepository = exhibitRepository;
         this.expositionRepository = expositionRepository;
         this.newsRepository = newsRepository;
@@ -41,6 +43,7 @@ public class EntityRestController {
         this.authenticationService = authenticationService;
         this.privateMessageRepository = privateMessageRepository;
         this.fileRepository = fileRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     @GetMapping(value = "/exhibits")
@@ -222,6 +225,31 @@ public class EntityRestController {
         return ResponseEntity.ok(result);
     }
 
+    //
+    @GetMapping(value = "/tickets")
+    public List ticketGetAll() {
+        return ticketRepository.findAll();
+    }
+
+    @GetMapping(value = "tickets/{id}")
+    public Ticket ticketGetById(@PathVariable("id") Long id) {
+        return ticketRepository.getOne(id);
+    }
+
+    @PostMapping(value = "ticket/add")
+    public ResponseEntity<?> newsAdd(@RequestBody Ticket ticket, Authentication authentication) {
+        AjaxForm result = new AjaxForm();
+        User user = authenticationService.getUserByAuthentication(authentication);
+        ticket.setRecipient(user);
+        ticket.setTicketStatus(TicketStatus.NEW);
+        try {
+            ticketRepository.save(ticket);
+            result.setMsg("success");
+        } catch (Exception e) {
+            result.setMsg("badRequest");
+        }
+        return ResponseEntity.ok(result);
+    }
     ///
 
     @GetMapping(value = "/topics")
@@ -346,7 +374,8 @@ public class EntityRestController {
         try {
             File file = fileRepository.getOne(id);
             Cloudinary cloudinary = new Cloudinary(CLOUDINARY_URL);
-            cloudinary.uploader().destroy(file.getFile(), ObjectUtils.emptyMap());
+            String publicId = file.getUpload().getPublicId();
+            cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
             fileRepository.delete(id);
             result.setMsg("success");
         } catch (Exception e) {

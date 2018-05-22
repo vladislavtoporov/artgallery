@@ -29,6 +29,8 @@ public class Ticket {
 
     private String content;
 
+    private String answer;
+
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp ts;
 
@@ -39,6 +41,10 @@ public class Ticket {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipient_id", nullable = false)
     private User recipient;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id", nullable = false)
+    private User manager;
 
     @OneToMany(mappedBy = "ticket")
     private Set<File> files;

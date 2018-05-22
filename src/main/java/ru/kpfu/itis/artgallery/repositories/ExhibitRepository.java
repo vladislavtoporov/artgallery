@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.kpfu.itis.artgallery.models.Exhibit;
 import ru.kpfu.itis.artgallery.models.Exposition;
+import ru.kpfu.itis.artgallery.models.User;
 
 import java.util.Set;
 
@@ -14,4 +15,8 @@ public interface ExhibitRepository extends JpaRepository<Exhibit, Long> {
     Page<Exhibit> findAllByNameContainingOrderByTs(Pageable pageable, String querry);
 
     Page<Exhibit> findAllByNameContainingOrderByAuthor(Pageable pageable, String querry);
+
+    Page<Exhibit> findAll(Pageable pageable);
+
+    Page<Exhibit> findAllByAuthor(Pageable pageable, User author);
 }

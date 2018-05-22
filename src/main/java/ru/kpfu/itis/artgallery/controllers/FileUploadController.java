@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import ru.kpfu.itis.artgallery.models.Exhibit;
 import ru.kpfu.itis.artgallery.models.File;
 import ru.kpfu.itis.artgallery.models.FileUpload;
 import ru.kpfu.itis.artgallery.models.User;
@@ -54,12 +55,10 @@ public class FileUploadController {
                 fileUpload.setVersion((Long) version);
             }
 
-            fileUpload.setSignature((String) uploadResult.get("signature"));
-            System.out.println(uploadResult.get("signature"));
+//            fileUpload.setSignature((String) uploadResult.get("signature"));
+//            System.out.println(uploadResult.get("signature"));
             fileUpload.setFormat((String) uploadResult.get("format"));
-            System.out.println(uploadResult.get("format"));
             fileUpload.setResourceType((String) uploadResult.get("resource_type"));
-            System.out.println(uploadResult.get("resource_type"));
         }
 
         if (result.hasErrors()) {
@@ -71,13 +70,19 @@ public class FileUploadController {
             file.setName(fileUpload.getName());
             file.setContentType((String) uploadResult.getOrDefault("resource_type", "raw"));
             file.setUser(user);
+            file.setFormat(fileUpload.getFormat());
             file.setUpload(fileUpload);
             if (fileUpload.getExhibitId() != null) {
-                file.setExhibit(exhibitRepository.getOne(fileUpload.getExhibitId()));
+                Exhibit exhibit = exhibitRepository.getOne(fileUpload.getExhibitId());
+                file.setExhibit(exhibit);
+                if (exhibit.getPicture() == null && "image".equals(uploadResult.get("resource_type"))) {
+                    exhibit.setPictureFile(fileUpload);
+                }
+
             }
-            model.addAttribute("upload", uploadResult);
-            fileRepository.save(file);
-            model.addAttribute("file", file);
+//            model.addAttribute("upload", uploadResult);
+//            fileRepository.save(file);
+//            model.addAttribute("file", file);
             return "/";
         }
     }

@@ -42,6 +42,5 @@ public class UserRegistrationFormValidator implements Validator {
         if (!form.getPassword().equals(form.getPasswordRepeat())) {
             errors.reject("bad.login", "Пароли не совпадают");
         }
-        System.out.println("success validation");
     }
 }

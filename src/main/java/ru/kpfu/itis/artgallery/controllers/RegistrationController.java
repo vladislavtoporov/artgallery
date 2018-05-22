@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,21 +34,20 @@ public class RegistrationController {
 
     @PostMapping(value = "/signUp")
     public String signUp(@Valid @ModelAttribute("userForm") UserRegistrationForm userRegistrationForm,
-                         Model model, BindingResult errors, RedirectAttributes attributes) {
+                         BindingResult errors, Model model, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
-            attributes.addFlashAttribute("/error", errors.getAllErrors().get(0).getDefaultMessage());
-            model.addAttribute("failReg", "fail");
-            model.addAttribute("user", userRegistrationForm);
-            return "signIn";
+            attributes.addFlashAttribute("error", errors.getAllErrors().get(0).getDefaultMessage());
+            attributes.addFlashAttribute("userForm", userRegistrationForm);
+            return "redirect:/signUp";
         }
         userService.register(userRegistrationForm);
 
         return "redirect:/signIn";
     }
 
-//    @GetMapping(value = "/signUp/error")
-//    public String getSignUpPage(Model model) {
-//        model.addAttribute("failReg", true);
-//        return "signIn";
-//    }
+    @GetMapping(value = "/signUp")
+    public String getSignUpPage(Model model) {
+        model.addAttribute("userForm", new UserRegistrationForm());
+        return "signUp";
+    }
 }

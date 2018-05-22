@@ -37,11 +37,11 @@ public class SearchController {
                              Model model) {
         model.addAttribute("querry", querry);
         if (exhibitFlag != null) {
-            Page<Exhibit> exhibits = exhibitService.findAllBySort(querry, sort, 0);
+            Page<Exhibit> exhibits = exhibitService.findAllByQuerry(querry, sort, 0);
             model.addAttribute("exhibits", exhibits);
         }
         if (expositionFlag != null) {
-            Page<Exposition> expositions = expositionService.findAllBySort(querry, sort, 0);
+            Page<Exposition> expositions = expositionService.findAllByQuerry(querry, sort, 0);
             model.addAttribute("expositions", expositions);
         }
         return "search";

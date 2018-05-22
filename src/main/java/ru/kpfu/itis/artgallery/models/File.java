@@ -32,6 +32,8 @@ public class File {
     @Basic
     private String file;
 
+    private String format;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

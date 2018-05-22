@@ -61,10 +61,13 @@ public class Exposition {
         this.name = expositionForm.getName();
         this.description = expositionForm.getDescription();
         this.owner = owner;
-
-        String[] startArray = expositionForm.getStart().split("/");
+        System.out.println("\n\n\n\n");
+        System.out.println(expositionForm.getStart());
+        String[] startArray = expositionForm.getStart().split("\\.");
+        System.out.println(Arrays.toString(startArray));
         int[] startValue = Arrays.stream(startArray).mapToInt(Integer::parseInt).toArray();
-        String[] finishArray = expositionForm.getFinish().split("/");
+        System.out.println(Arrays.toString(startValue));
+        String[] finishArray = expositionForm.getFinish().split("\\.");
         int[] finishValue = Arrays.stream(finishArray).mapToInt(Integer::parseInt).toArray();
 
         this.start = Date.valueOf(LocalDate.of(startValue[0], startValue[1], startValue[2]));
@@ -72,6 +75,8 @@ public class Exposition {
     }
 
     public String getRange() {
-        return start.toString() + " - " + finish.toString();
+        if (start != null && finish != null)
+            return start.toString() + " - " + finish.toString();
+        else return "";
     }
 }

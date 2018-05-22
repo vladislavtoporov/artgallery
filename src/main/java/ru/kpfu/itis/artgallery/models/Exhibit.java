@@ -1,5 +1,6 @@
 package ru.kpfu.itis.artgallery.models;
 
+import com.cloudinary.StoredFile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -34,11 +35,7 @@ public class Exhibit {
     @Column(length = 1000)
     private String content;
 
-    @Column(name = "audio_path", length = 50)
-    private String audioPath;
-
-    @Column(name = "video_path", length = 50)
-    private String videoPath;
+    private String picture;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp ts;
@@ -68,5 +65,13 @@ public class Exhibit {
         this.content = exhibitForm.getContent();
         this.exposition = exposition;
         this.author = author;
+    }
+
+    public String getPictureFile() {
+        return "http://res.cloudinary.com/mt21/" + picture;
+    }
+
+    public void setPictureFile(StoredFile file) {
+        this.picture = file.getPreloadedFile();
     }
 }

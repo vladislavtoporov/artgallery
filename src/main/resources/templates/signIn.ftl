@@ -21,10 +21,6 @@
             <input type="hidden" name="scope" value="public_profile"/>
             <button class="btn btn-sm btn-primary" type="submit">Login using Facebook</button>
         </form>
-        <form action="/signin/twitter" method="POST">
-            <input type="hidden" name="scope" value="public_profile"/>
-            <button class="btn btn-sm btn-primary" type="submit">Login using Twitter</button>
-        </form>
     </div>
     <form class="form-signin" method="post" action="/login">
     <#if error??>
@@ -55,72 +51,13 @@
                 <input type="checkbox" name="remember-me-param" checked> Remember me
             </label>
         </div>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
-        <button class="btn btn-lg btn-primary btn-block" id="regModal" type="button" data-toggle="modal"
-                data-target="#myModal">
+        <a href="/signUp" class="btn btn-lg btn-primary btn-block" rel="button" type="button">
             Зарегистрироваться
-        </button>
+        </a>
     </form>
-
 </div>
-<!-- Modal -->
-
-<div id="myModal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-name">Регистрация</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container">
-                    <form action="/signUp" name="userForm" method="post" class="form-signin">
-                        <input type="hidden" value="${failReg!''}" id="failReg">
-                        <div class="form-label-group validation">
-                            <input type="email" name="login" id="regEmail" class="form-control"
-                                   placeholder="Email address" required autofocus>
-                            <span class="validity"></span>
-                            <label for="regEmail">Email</label>
-                        </div>
-
-                        <div class="form-label-group validation">
-                            <input type="text" pattern="[A-Za-zА-Яа-ЯЁ]+" name="name" id="regName" class="form-control"
-                                   placeholder="Full name" required autofocus>
-                            <span class="validity"></span>
-                            <label for="regName">ФИО</label>
-                        </div>
-
-                        <div class="form-label-group validation">
-                            <input type="password"
-                                   pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
-                                   name="password" id="regPassword" class="form-control" placeholder="Email address"
-                                   required autofocus>
-                            <span class="validity"></span>
-                            <label for="regPassword">Пароль</label>
-                        </div>
-
-                        <div class="form-label-group validation">
-                            <input type="password"
-                                   pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
-                                   name="passwordRepeat" id="regPasswordRepeat" class="form-control"
-                                   placeholder="Email address" required autofocus>
-                            <span class="validity"></span>
-                            <label for="regPasswordRepeat">Повторите Пароль</label>
-                        </div>
-
-                        <button class="btn btn-lg btn-primary btn-block" type="submit">Зарегистрироваться</button>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" type="button" data-dismiss="modal">Закрыть</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <!-- jQuery 3 -->
 <script src="/bower_components/jquery/dist/jquery.min.js"></script>
@@ -128,12 +65,5 @@
         integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
         crossorigin="anonymous"></script>
 <script type="application/javascript" src="/js/bootstrap.min.js"></script>
-<script type="application/javascript">
-    if ($('#failReg').val()) {
-        $(function () {
-            $('#regModal').trigger('click');
-        });
-    }
-</script>
 </body>
 </html>
