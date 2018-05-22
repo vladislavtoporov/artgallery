@@ -14,6 +14,6 @@ public class ApplicationIntegrationTest {
 
     @Test
     public void whenLoadApplication_thenSuccess() {
-        Assert.assertTrue(true);
+        Assert.assertTrue(false);
     }
 }
