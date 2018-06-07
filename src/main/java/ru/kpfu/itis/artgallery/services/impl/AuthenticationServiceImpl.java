@@ -18,6 +18,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public User getUserByAuthentication(Authentication authentication) {
         UserDetailsImpl currentUserDetails = (UserDetailsImpl) authentication.getPrincipal();
+//        ExampleUserDetails currentUserDetails = (ExampleUserDetails) authentication.getPrincipal();
         User currentUserModel = currentUserDetails.getUser();
         Long currentUserId = currentUserModel.getId();
         return userRepository.getOne(currentUserId);

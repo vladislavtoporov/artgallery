@@ -1,15 +1,16 @@
 package ru.kpfu.itis.artgallery.forms;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.validator.constraints.Email;
+
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserRegistrationForm {
+    @Email(message = "логин должен содержать email")
     private String login;
     private String name;
     private String password;

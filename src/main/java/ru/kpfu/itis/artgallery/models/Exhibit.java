@@ -1,8 +1,10 @@
 package ru.kpfu.itis.artgallery.models;
 
 import com.cloudinary.StoredFile;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -29,7 +31,7 @@ public class Exhibit {
     @SequenceGenerator(name = "exhibit_id_seq", sequenceName = "exhibit_id_seq", allocationSize = 1)
     private Long id;
 
-    @Column(length = 50)
+    @Column(length = 50, unique = true)
     private String name;
 
     @Column(length = 1000)
@@ -51,13 +53,13 @@ public class Exhibit {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "exhibit")
     private Set<File> images;
 
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "exposition_id", nullable = false)
+    @JoinColumn(name = "exposition_id")
     private Exposition exposition;
 
     public Exhibit(ExhibitForm exhibitForm, User author, Exposition exposition) {

@@ -19,7 +19,13 @@
         <h1 class="h3 mb-3 font-weight-normal">Пожалуйста, авторизуйтесь</h1>
         <form action="/signin/facebook" method="POST">
             <input type="hidden" name="scope" value="public_profile"/>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <button class="btn btn-sm btn-primary" type="submit">Login using Facebook</button>
+        </form>
+        <form action="/signin/twitter" method="POST">
+            <input type="hidden" name="scope" value="public_profile"/>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button class="btn btn-sm btn-primary" type="submit">Login using Twitter</button>
         </form>
     </div>
     <form class="form-signin" method="post" action="/login">
@@ -28,22 +34,22 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-        ${error}
+            ${error}
         </div>
     </#if>
         <div class="form-label-group validation">
-            <input type="email" name="login" id="inputLogin" class="form-control" placeholder="Email address" required
+            <input type="email" name="login" id="login" class="form-control" placeholder="Email address" required
                    autofocus>
             <span class="validity"></span>
-            <label for="inputLogin">Email</label>
+            <label for="login">Email</label>
         </div>
 
         <div class="form-label-group validation">
             <input type="password" pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
-                   name="password" id="inputPassword" class="form-control" placeholder="Password"
+                   name="password" id="password" class="form-control" placeholder="Password"
                    required>
             <span class="validity"></span>
-            <label for="inputPassword">Пароль</label>
+            <label for="password">Пароль</label>
         </div>
 
         <div class="checkbox mb-3">

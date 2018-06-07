@@ -5,7 +5,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import ru.kpfu.itis.artgallery.forms.LoginForm;
-import ru.kpfu.itis.artgallery.forms.UserRegistrationForm;
 import ru.kpfu.itis.artgallery.models.User;
 import ru.kpfu.itis.artgallery.repositories.UserRepository;
 
@@ -22,7 +21,7 @@ public class LoginFormValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return aClass.getName().equals(UserRegistrationForm.class.getName());
+        return aClass.getName().equals(LoginForm.class.getName());
     }
 
     @Override

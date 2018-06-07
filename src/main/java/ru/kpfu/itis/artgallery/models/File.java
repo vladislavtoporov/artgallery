@@ -1,6 +1,7 @@
 package ru.kpfu.itis.artgallery.models;
 
 import com.cloudinary.StoredFile;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -32,6 +33,7 @@ public class File {
     @Basic
     private String file;
 
+
     private String format;
 
     @JsonIgnore
@@ -51,7 +53,7 @@ public class File {
     private PrivateMessage message;
 
 
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibit_id")
     private Exhibit exhibit;

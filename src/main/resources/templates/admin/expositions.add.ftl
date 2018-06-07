@@ -39,7 +39,7 @@
                         <form id="exposition-form">
                             <input type="hidden" id="id" value="${model.id!""}">
                             <input placeholder="название" required pattern=".+" class="form-control pull-right"
-                                   type="text" id="name" value="${model.name!""}">
+                                   type="text" id="name" value="${model.name!"название"}">
                             <input type="text" class="form-control pull-right" id="reservation"
                                    value="${model.getRange()!''}">
                             <textarea required id="description" rows="10"

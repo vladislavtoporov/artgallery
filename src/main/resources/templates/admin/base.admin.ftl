@@ -1,5 +1,5 @@
 <#macro head>
-    <#assign user_image="https://pp.userapi.com/c836530/v836530244/61eab/ob94LhFXq8k.jpg">
+    <#assign user_image="/img/portfolio_03.jpg">
 <meta charset="UTF-8">
 <meta name="_csrf" content="${_csrf.token}"/>
 <meta name="_csrf_header" content="${_csrf.headerName}"/>
@@ -54,92 +54,100 @@
                 <li class="dropdown messages-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-envelope-o"></i>
-                        <span class="label label-success">4</span>
+                        <#if messages??>
+                        <span class="label label-success">${messages?size}</span>
+                        </#if>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">You have 4 messages</li>
+                        <#if messages??>
+                        <li class="header">You have ${messages?size} messages</li>
+                        </#if>
                         <li>
                             <!-- inner menu: contains the actual data -->
                             <ul class="menu">
-                            <#--<li><!-- start message &ndash;&gt;-->
-                                    <#--<a href="#">-->
-                                        <#--<div class="pull-left">-->
-                                            <#--<img src="${user_image}" class="img-circle"-->
-                                                 <#--alt="User Image">-->
-                                        <#--</div>-->
-                                        <#--<h4>-->
-                                            <#--Support Team-->
-                                            <#--<small><i class="fa fa-clock-o"></i> 5 mins</small>-->
-                                        <#--</h4>-->
-                                        <#--<p>Why not buy a new awesome theme?</p>-->
-                                    <#--</a>-->
-                                <#--</li>-->
-                                <#--<!-- end message &ndash;&gt;-->
-                                <#--<li>-->
-                                    <#--<a href="#">-->
-                                        <#--<div class="pull-left">-->
-                                            <#--<img src="${user_image}" class="img-circle"-->
-                                                 <#--alt="User Image">-->
-                                        <#--</div>-->
-                                        <#--<h4>-->
-                                            <#--AdminLTE Design Team-->
-                                            <#--<small><i class="fa fa-clock-o"></i> 2 hours</small>-->
-                                        <#--</h4>-->
-                                        <#--<p>Why not buy a new awesome theme?</p>-->
-                                    <#--</a>-->
-                                <#--</li>-->
-                                <#--<li>-->
-                                    <#--<a href="#">-->
-                                        <#--<div class="pull-left">-->
-                                            <#--<img src="${user_image}" class="img-circle"-->
-                                                 <#--alt="User Image">-->
-                                        <#--</div>-->
-                                        <#--<h4>-->
-                                            <#--Developers-->
-                                            <#--<small><i class="fa fa-clock-o"></i> Today</small>-->
-                                        <#--</h4>-->
-                                        <#--<p>Why not buy a new awesome theme?</p>-->
-                                    <#--</a>-->
-                                <#--</li>-->
-                                <#--<li>-->
-                                    <#--<a href="#">-->
-                                        <#--<div class="pull-left">-->
-                                            <#--<img src="${user_image}" class="img-circle"-->
-                                                 <#--alt="User Image">-->
-                                        <#--</div>-->
-                                        <#--<h4>-->
-                                            <#--Sales Department-->
-                                            <#--<small><i class="fa fa-clock-o"></i> Yesterday</small>-->
-                                        <#--</h4>-->
-                                        <#--<p>Why not buy a new awesome theme?</p>-->
-                                    <#--</a>-->
-                                <#--</li>-->
-                                <#--<li>-->
-                                    <#--<a href="#">-->
-                                        <#--<div class="pull-left">-->
-                                            <#--<img src="${user_image}" class="img-circle"-->
-                                                 <#--alt="User Image">-->
-                                        <#--</div>-->
-                                        <#--<h4>-->
-                                            <#--Reviewers-->
-                                            <#--<small><i class="fa fa-clock-o"></i> 2 days</small>-->
-                                        <#--</h4>-->
-                                        <#--<p>Why not buy a new awesome theme?</p>-->
-                                    <#--</a>-->
-                                <#--</li>-->
+                                <#if messages??>
+                                    <#list messages as mes>
+                                         <li><!-- start message -->
+                                             <a href="/admin/readMail/${mes.id}">
+                                                 <div class="pull-left">
+                                                     <img src="${user_image}" class="img-circle"
+                                                          alt="User Image">
+                                                 </div>
+                                                 <h4>
+                                                     ${mes.header}
+                                                     <small><i class="fa fa-clock-o">${mes.ts}</i></small>
+                                                 </h4>
+                                             </a>
+                                         </li>
+                                    </#list>
+                                </#if>
+
+                            <#--<!-- end message &ndash;&gt;-->
+                            <#--<li>-->
+                            <#--<a href="#">-->
+                            <#--<div class="pull-left">-->
+                            <#--<img src="${user_image}" class="img-circle"-->
+                            <#--alt="User Image">-->
+                            <#--</div>-->
+                            <#--<h4>-->
+                            <#--AdminLTE Design Team-->
+                            <#--<small><i class="fa fa-clock-o"></i> 2 hours</small>-->
+                            <#--</h4>-->
+                            <#--<p>Why not buy a new awesome theme?</p>-->
+                            <#--</a>-->
+                            <#--</li>-->
+                            <#--<li>-->
+                            <#--<a href="#">-->
+                            <#--<div class="pull-left">-->
+                            <#--<img src="${user_image}" class="img-circle"-->
+                            <#--alt="User Image">-->
+                            <#--</div>-->
+                            <#--<h4>-->
+                            <#--Developers-->
+                            <#--<small><i class="fa fa-clock-o"></i> Today</small>-->
+                            <#--</h4>-->
+                            <#--<p>Why not buy a new awesome theme?</p>-->
+                            <#--</a>-->
+                            <#--</li>-->
+                            <#--<li>-->
+                            <#--<a href="#">-->
+                            <#--<div class="pull-left">-->
+                            <#--<img src="${user_image}" class="img-circle"-->
+                            <#--alt="User Image">-->
+                            <#--</div>-->
+                            <#--<h4>-->
+                            <#--Sales Department-->
+                            <#--<small><i class="fa fa-clock-o"></i> Yesterday</small>-->
+                            <#--</h4>-->
+                            <#--<p>Why not buy a new awesome theme?</p>-->
+                            <#--</a>-->
+                            <#--</li>-->
+                            <#--<li>-->
+                            <#--<a href="#">-->
+                            <#--<div class="pull-left">-->
+                            <#--<img src="${user_image}" class="img-circle"-->
+                            <#--alt="User Image">-->
+                            <#--</div>-->
+                            <#--<h4>-->
+                            <#--Reviewers-->
+                            <#--<small><i class="fa fa-clock-o"></i> 2 days</small>-->
+                            <#--</h4>-->
+                            <#--<p>Why not buy a new awesome theme?</p>-->
+                            <#--</a>-->
+                            <#--</li>-->
                             </ul>
                         </li>
-                        <li class="footer"><a href="#">See All Messages</a></li>
+                        <li class="footer"><a href="/admin/mailbox/new">See All Messages</a></li>
                     </ul>
                 </li>
                 <!-- Notifications: style can be found in dropdown.less -->
                 <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
-                        <span class="label label-warning">10</span>
+                        <span class="label label-warning">0</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">You have 10 notifications</li>
+                        <li class="header">You have 0 tickets</li>
                     <#--<li>-->
                     <#--<!-- inner menu: contains the actual data &ndash;&gt;-->
                     <#--<ul class="menu">-->
@@ -179,10 +187,10 @@
                 <li class="dropdown tasks-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-flag-o"></i>
-                        <span class="label label-danger">9</span>
+                        <span class="label label-danger">0</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">You have 9 tasks</li>
+                        <li class="header">You have 0 tasks</li>
                     <#--<li>-->
                     <#--<!-- inner menu: contains the actual data &ndash;&gt;-->
                     <#--<ul class="menu">-->
@@ -270,7 +278,7 @@
                             <img src="${user_image}"
                                  class="img-circle" alt="User Image">
                             <p>
-                            ${user.name}
+                                ${user.name}
                                 <small>Motto</small>
                             </p>
                         </li>
@@ -295,7 +303,11 @@
                                 <a href="/profiles/${user.id}" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
-                                <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
+                                <form id="logout-form" action="/logout" method="post">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                    <a class="nav-link"
+                                       onclick="document.getElementById('logout-form').submit();">Выйти</a>
+                                </form>
                             </div>
                         </li>
                     </ul>
@@ -317,16 +329,17 @@
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
         <!-- Sidebar user panel -->
-        <div class="user-panel">
+        <div class="user-panel" style="margin-bottom: 20px">
             <div class="pull-left file">
-                <img src="${user_image}" class="img-circle"
+                <img src="${user_image}" width="50px" height="50px" class="img-circle"
                      alt="User Image">
             </div>
             <div class="pull-left info">
                 <p>${user.name}</p>
-                <a href="#"><i class="fa fa-circle text-success"></i>${user.role}</a>
+                <p><i class="fa fa-circle text-success"></i> ${user.role}</p>
             </div>
         </div>
+        <br>
         <!-- search form -->
         <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
@@ -347,6 +360,7 @@
             <li><a href="/admin/news"><i class="fa fa-circle-o text-aqua"></i> <span>News</span></a></li>
             <li><a href="/admin/users"><i class="fa fa-circle-o text-purple"></i> <span>Users</span></a></li>
             <li><a href="/admin/mailbox"><i class="fa fa-circle-o text-lime"></i> <span>Mailbox</span></a></li>
+            <li><a href="/admin/ticketbox/new"><i class="fa fa-circle-o text-lime"></i> <span>Tickets</span></a></li>
 
         </ul>
     </section>

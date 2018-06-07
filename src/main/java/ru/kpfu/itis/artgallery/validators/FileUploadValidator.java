@@ -1,11 +1,13 @@
 package ru.kpfu.itis.artgallery.validators;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import ru.kpfu.itis.artgallery.models.FileUpload;
 
-public class PhotoUploadValidator implements Validator {
+@Component
+public class FileUploadValidator implements Validator {
     public boolean supports(Class clazz) {
         return FileUpload.class.equals(clazz);
     }

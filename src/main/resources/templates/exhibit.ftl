@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="/owlcarousel/owl.theme.default.min.css">
     <link rel="stylesheet" href="/owlcarousel/owl.theme.green.min.css">
     <link rel="stylesheet" href="/owlcarousel/owl.carousel.min.css">
+    <script type="text/javascript" src="//vk.com/js/api/openapi.js?154"></script>
+    <script type="text/javascript">
+        VK.init({apiId: 6492163, onlyWidgets: true});
+    </script>
 </head>
 <body>
 
@@ -29,9 +33,9 @@
 
                     <div class="col-lg-6 lobster text-center" style="margin: auto">
                         <h2>${model.name!""}</h2>
+                        <h4>Автор ${model.author.name!""}</h4>
                         <h4>Рейтинг 5.00</h4>
-                        <h4>138 отзывов</h4>
-                        <h4>Опубликовано ${model.ts}</h4>
+                        <h4 class="text-right">Опубликовано ${model.ts}</h4>
                     </div>
                 </div>
 
@@ -73,31 +77,35 @@
                 </div>
             </div>
             <div class="well">
-                <div class="container lobster">
-                    <h3 class="text-center">Отзывы</h3>
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <img src="/img/portfolio_07.jpg" width="90" height="90" class="rounded-circle">
-                        </div>
-                        <div class="col-lg-10">
-                            <h4>Иванов Иван</h4>
-                            <h5>Оценка 5</h5>
-                        </div>
-                        <div style="margin-top: 10px">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias iusto natus officia
-                                placeat
-                                recusandae
-                                tempora temporibus velit. A aliquam eos nostrum quia rerum tempora unde velit. Deleniti
-                                facere
-                                reiciendis voluptate!</p>
-                            <h6 class="text-right">Опубликовано 21.10.2017</h6>
-                            <hr align="center" width="100%" size="1" color="#fafafa"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center"><a class="btn btn-lg btn-primary" href="#" role="button">
-                    Показать ещё</a>
-                </div>
+                <div id="vk_comments"></div>
+                <script type="text/javascript">
+                    VK.Widgets.Comments("vk_comments", {limit: 50, attach: "*"});
+                </script>
+            <#--<div class="container lobster">-->
+            <#--<h3 class="text-center">Отзывы</h3>-->
+            <#--<div class="row">-->
+            <#--<div class="col-lg-2">-->
+            <#--<img src="/img/portfolio_07.jpg" width="90" height="90" class="rounded-circle">-->
+            <#--</div>-->
+            <#--<div class="col-lg-10">-->
+            <#--<h4>Иванов Иван</h4>-->
+            <#--<h5>Оценка 5</h5>-->
+            <#--</div>-->
+            <#--<div style="margin-top: 10px">-->
+            <#--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias iusto natus officia-->
+            <#--placeat-->
+            <#--recusandae-->
+            <#--tempora temporibus velit. A aliquam eos nostrum quia rerum tempora unde velit. Deleniti-->
+            <#--facere-->
+            <#--reiciendis voluptate!</p>-->
+            <#--<h6 class="text-right">Опубликовано 21.10.2017</h6>-->
+            <#--<hr align="center" width="100%" size="1" color="#fafafa"/>-->
+            <#--</div>-->
+            <#--</div>-->
+            <#--</div>-->
+            <#--<div class="text-center"><a class="btn btn-lg btn-primary" href="#" role="button">-->
+            <#--Показать ещё</a>-->
+            <#--</div>-->
             </div>
         </div>
 
@@ -107,13 +115,13 @@
             <#list exhibits.iterator() as ex>
                 <div>
                     <hr align="center" width="100%" size="1" color="#fafafa"/>
-                    <a href="#">
+                    <a href="/exhibits/${ex.id}">
                         <h3>${ex.name}</h3></a>
                     <img src="${ex.getPictureFile()!''}" width="100" height="100">
-                    <div class="lobster">
-                        <h4>Рейтинг 100</h4>
-                        <h4>25 отзывов</h4>
-                    </div>
+                <#--<div class="lobster">-->
+                <#--<h4>Рейтинг 100</h4>-->
+                <#--<h4>25 отзывов</h4>-->
+                <#--</div>-->
                 </div>
             </#list>
 

@@ -1,5 +1,6 @@
 package ru.kpfu.itis.artgallery.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -24,12 +25,10 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ticket_id_seq")
     @SequenceGenerator(name = "ticket_id_seq", sequenceName = "ticket_id_seq", allocationSize = 1)
     private Long id;
-
     private String header;
-
     private String content;
-
     private String answer;
+
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp ts;
@@ -43,9 +42,10 @@ public class Ticket {
     private User recipient;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id", nullable = false)
+    @JoinColumn(name = "manager_id", nullable = true)
     private User manager;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "ticket")
     private Set<File> files;
 

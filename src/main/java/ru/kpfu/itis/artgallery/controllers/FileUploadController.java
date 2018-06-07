@@ -2,12 +2,13 @@ package ru.kpfu.itis.artgallery.controllers;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,28 +19,39 @@ import ru.kpfu.itis.artgallery.models.User;
 import ru.kpfu.itis.artgallery.repositories.ExhibitRepository;
 import ru.kpfu.itis.artgallery.repositories.FileRepository;
 import ru.kpfu.itis.artgallery.services.AuthenticationService;
-import ru.kpfu.itis.artgallery.validators.PhotoUploadValidator;
+import ru.kpfu.itis.artgallery.validators.FileUploadValidator;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/")
 public class FileUploadController {
-    @Autowired
     private FileRepository fileRepository;
-    @Autowired
     private ExhibitRepository exhibitRepository;
-    @Autowired
     private AuthenticationService authenticationService;
     @Value("${CLOUDINARY_URL}")
     private String CLOUDINARY_URL;
+    private FileUploadValidator fileUploadValidator;
+
+    public FileUploadController(FileRepository fileRepository, ExhibitRepository exhibitRepository, AuthenticationService authenticationService, FileUploadValidator fileUploadValidator) {
+        this.fileRepository = fileRepository;
+        this.exhibitRepository = exhibitRepository;
+        this.authenticationService = authenticationService;
+        this.fileUploadValidator = fileUploadValidator;
+    }
+
+    @InitBinder("fileForm")
+    public void initFileUploadValidator(WebDataBinder binder) {
+        binder.addValidators(fileUploadValidator);
+    }
 
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String uploadPhoto(@ModelAttribute FileUpload fileUpload, BindingResult result,
+    public String uploadPhoto(@Valid @ModelAttribute("fileForm") FileUpload fileUpload, BindingResult result,
                               ModelMap model, Authentication authentication) throws IOException {
-        PhotoUploadValidator validator = new PhotoUploadValidator();
+        FileUploadValidator validator = new FileUploadValidator();
         validator.validate(fileUpload, result);
 
         Map uploadResult = null;

@@ -22,7 +22,33 @@ h3,h4,h6 {
 h4 {
     margin-top: 10px;
 }
+
+.tt-menu,
+.gist {
+    text-align: left;
+}
+
+.tt-menu {
+    width: 220px;
+    margin: 12px;
+    padding: 8px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+
+#scrollable-dropdown-menu .tt-menu {
+    max-height: 150px;
+    overflow-y: auto;
+}
 /* Center align the text within the three columns below the carousel */
+
 .marketing .col-lg-4 {
     margin-bottom: 1.5rem;
     text-align: center;

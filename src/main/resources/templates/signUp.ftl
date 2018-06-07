@@ -17,6 +17,7 @@
 <#if error??>
     <div class="alert alert-danger" role="alert">${error}</div>
 </#if>
+    <h1 class="h3 mb-3 font-weight-normal">Пожалуйста зарегистрируйтесь</h1>
     <form action="/signUp" name="userForm" method="post" class="form-signin">
         <div class="form-label-group validation">
             <input type="email" name="login" id="regEmail" class="form-control"

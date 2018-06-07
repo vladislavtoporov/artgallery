@@ -1,4 +1,4 @@
-package ru.kpfu.itis.artgallery.controllers;
+package ru.kpfu.itis.artgallery.controllers.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kpfu.itis.artgallery.enums.Role;
-import ru.kpfu.itis.artgallery.models.Exhibit;
-import ru.kpfu.itis.artgallery.models.Exposition;
-import ru.kpfu.itis.artgallery.models.News;
-import ru.kpfu.itis.artgallery.models.User;
+import ru.kpfu.itis.artgallery.enums.TicketStatus;
+import ru.kpfu.itis.artgallery.models.*;
 import ru.kpfu.itis.artgallery.repositories.*;
 import ru.kpfu.itis.artgallery.services.AuthenticationService;
 import ru.kpfu.itis.artgallery.services.PrivateMessageService;
+
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -25,16 +25,18 @@ public class AdminController {
     private NewsRepository newsRepository;
     private UserRepository userRepository;
     private PrivateMessageRepository privateMessageRepository;
+    private TicketRepository ticketRepository;
 
 
     @Autowired
-    public AdminController(AuthenticationService service, ExhibitRepository exhibitRepository, ExpositionRepository expositionRepository, NewsRepository newsRepository, UserRepository userRepository, PrivateMessageService privateMessageService, PrivateMessageRepository privateMessageRepository) {
+    public AdminController(AuthenticationService service, ExhibitRepository exhibitRepository, ExpositionRepository expositionRepository, NewsRepository newsRepository, UserRepository userRepository, PrivateMessageService privateMessageService, PrivateMessageRepository privateMessageRepository, TicketRepository ticketRepository) {
         this.authService = service;
         this.exhibitRepository = exhibitRepository;
         this.expositionRepository = expositionRepository;
         this.newsRepository = newsRepository;
         this.userRepository = userRepository;
         this.privateMessageRepository = privateMessageRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     @GetMapping("")
@@ -130,13 +132,46 @@ public class AdminController {
     @GetMapping("/mailbox")
     public String mailbox(Model model, Authentication authentication) {
         User user = authService.getUserByAuthentication(authentication);
+
         model.addAttribute("model", privateMessageRepository.findAllByRecipient(user));
+        return "admin/mailbox";
+    }
+
+    @GetMapping("/mailbox/new")
+    public String mailboxNew(Model model, Authentication authentication) {
+        User user = authService.getUserByAuthentication(authentication);
+        model.addAttribute("model", privateMessageRepository.findAllByRecipientAndIsRead(user, false));
         return "admin/mailbox";
     }
 
     @GetMapping("/readMail/{id}")
     public String readMail(Model model, @PathVariable Long id, Authentication authentication) {
-        model.addAttribute("model", privateMessageRepository.getOne(id));
+        PrivateMessage message = privateMessageRepository.getOne(id);
+        message.setIsRead(true);
+        privateMessageRepository.save(message);
+        model.addAttribute("model", message);
         return "admin/read-mail";
+    }
+
+    @GetMapping("/composeTicket")
+    public String composeTicket(Model model, Authentication authentication) {
+        return "admin/composeTicket";
+    }
+
+    @GetMapping("/ticketbox/{status}")
+    public String getTickets(Model model, @PathVariable String status) {
+        List<Ticket> tickets = ticketRepository.findAllByTicketStatus(TicketStatus.valueOf(status.toUpperCase()));
+        model.addAttribute("model", tickets);
+        System.out.println(tickets);
+        return "admin/ticketbox";
+    }
+
+    @GetMapping("/readTicket/{id}")
+    public String readTicket(Model model, @PathVariable Long id, Authentication authentication) {
+        Ticket ticket = ticketRepository.getOne(id);
+        ticket.setTicketStatus(TicketStatus.PROCESSING);
+        ticketRepository.save(ticket);
+        model.addAttribute("model", ticket);
+        return "admin/read-ticket";
     }
 }

@@ -1,72 +1,81 @@
 CREATE TABLE exhibit
 (
-  id            BIGSERIAL NOT NULL
+  id            BIGINT NOT NULL
     CONSTRAINT exhibit_pkey
     PRIMARY KEY,
-  audio_path    VARCHAR(50),
   content       VARCHAR(1000),
   count_votes   INTEGER   DEFAULT 0,
   name          VARCHAR(50),
   sum_votes     INTEGER   DEFAULT 0,
   ts            TIMESTAMP DEFAULT now(),
-  video_path    VARCHAR(50),
-  author_id     BIGINT    NOT NULL,
-  exposition_id BIGINT    NOT NULL
+  author_id     BIGINT NOT NULL
+    CONSTRAINT fktn87tbcp62j9v6cvswjiudhkm
+    REFERENCES users,
+  exposition_id BIGINT
+    CONSTRAINT fkf2jx0qqjy8s20p7ne2gkcq303
+    REFERENCES exposition,
+  picture       VARCHAR(255)
 );
-
 CREATE TABLE exposition
 (
-  id          BIGSERIAL NOT NULL
+  id          BIGINT NOT NULL
     CONSTRAINT exposition_pkey
     PRIMARY KEY,
-  description VARCHAR(255),
-  finish      TIMESTAMP DEFAULT now(),
+  description VARCHAR(1000),
+  finish      DATE,
   name        VARCHAR(50),
-  price       INTEGER   DEFAULT 0,
-  start       TIMESTAMP DEFAULT now()
+  price       INTEGER DEFAULT 0,
+  start       DATE,
+  owner_id    BIGINT
+    CONSTRAINT fkkaiuwhc4aq75a5hx2usxxq5xd
+    REFERENCES users,
+  picture     VARCHAR(255)
 );
-
-ALTER TABLE exhibit
-  ADD CONSTRAINT fkvog45037g7jua6qk7787xn4d
-FOREIGN KEY (exposition_id) REFERENCES exposition;
-
 CREATE TABLE file
 (
-  id          BIGSERIAL NOT NULL
+  id           BIGINT NOT NULL
     CONSTRAINT file_pkey
     PRIMARY KEY,
-  origin_name VARCHAR(50),
-  path        VARCHAR(50),
-  exhibit_id  BIGINT    NOT NULL
-    CONSTRAINT fk4owr4l4owvx0o2sq76v4lqmay
+  content_type VARCHAR(10),
+  file         VARCHAR(255),
+  name         VARCHAR(255),
+  ts           TIMESTAMP DEFAULT now(),
+  exhibit_id   BIGINT
+    CONSTRAINT fk21bg6ol8iv9u62yqv9xdhkqoe
     REFERENCES exhibit,
-  message_id  BIGINT    NOT NULL,
-  ticket_id   BIGINT    NOT NULL
+  message_id   BIGINT
+    CONSTRAINT fko2qvs3ldcyci1rd3jdyjlee59
+    REFERENCES private_message,
+  ticket_id    BIGINT
+    CONSTRAINT fk6vg3be92y4y3tjbbg7r8vlrcd
+    REFERENCES ticket,
+  user_id      BIGINT NOT NULL
+    CONSTRAINT fke70ql3orpo0ghvfmqccv27ng
+    REFERENCES users,
+  format       VARCHAR(255)
 );
-
-CREATE TABLE file
-(
-  id          BIGSERIAL NOT NULL
-    CONSTRAINT image_pkey
-    PRIMARY KEY,
-  origin_name VARCHAR(50),
-  path        VARCHAR(50),
-  exhibit_id  BIGINT    NOT NULL
-    CONSTRAINT fkm0gumodbbt4m5dm9mc2ovoiev
-    REFERENCES exhibit
-);
-
 CREATE TABLE news
 (
-  id        BIGSERIAL NOT NULL
+  id        BIGINT NOT NULL
     CONSTRAINT news_pkey
     PRIMARY KEY,
   content   VARCHAR(3000),
+  header    VARCHAR(255),
   preview   VARCHAR(255),
   ts        TIMESTAMP DEFAULT now(),
-  author_id BIGINT    NOT NULL
+  author_id BIGINT NOT NULL
+    CONSTRAINT fk3qvva8ftw201mxkeuirniflgb
+    REFERENCES users
 );
-
+CREATE TABLE persistent_logins
+(
+  series    VARCHAR(64) NOT NULL
+    CONSTRAINT persistent_logins_pkey
+    PRIMARY KEY,
+  last_used TIMESTAMP DEFAULT now(),
+  token     VARCHAR(64) NOT NULL,
+  username  VARCHAR(64) NOT NULL
+);
 CREATE TABLE post
 (
   id        BIGSERIAL NOT NULL
@@ -74,25 +83,32 @@ CREATE TABLE post
     PRIMARY KEY,
   content   VARCHAR(255),
   ts        TIMESTAMP DEFAULT now(),
-  topic_id  BIGINT    NOT NULL,
+  topic_id  BIGINT    NOT NULL
+    CONSTRAINT fkg8ln3nj8tjclai0nuvpw5s5uw
+    REFERENCES topic
+    CONSTRAINT fkk0ab8mjj94yfpyebhmy5kydc9
+    REFERENCES topic,
   author_id BIGINT    NOT NULL
+    CONSTRAINT fk1mpebp1ayl0twrwm7ruiof778
+    REFERENCES users
+    CONSTRAINT fkn1eg4afbov769ple6qsvmbe4n
+    REFERENCES users
 );
-
 CREATE TABLE private_message
 (
-  id           BIGSERIAL NOT NULL
+  id           BIGINT NOT NULL
     CONSTRAINT private_message_pkey
     PRIMARY KEY,
   content      VARCHAR(500),
   ts           TIMESTAMP DEFAULT now(),
-  recipient_id BIGINT    NOT NULL,
-  sender_id    BIGINT    NOT NULL
+  recipient_id BIGINT NOT NULL
+    CONSTRAINT fk3mjc5gwe04kt18bfek8rpi8w
+    REFERENCES users,
+  sender_id    BIGINT NOT NULL
+    CONSTRAINT fkf6nbmipk0d9vln6rpcml7x883
+    REFERENCES users,
+  header       VARCHAR(100)
 );
-
-ALTER TABLE file
-  ADD CONSTRAINT fk85bjquknj3wk5wdriforljrhe
-FOREIGN KEY (message_id) REFERENCES private_message;
-
 CREATE TABLE ticket
 (
   id            BIGSERIAL NOT NULL
@@ -103,12 +119,15 @@ CREATE TABLE ticket
   ticket_status VARCHAR(255),
   ts            TIMESTAMP DEFAULT now(),
   recipient_id  BIGINT    NOT NULL
+    CONSTRAINT fkarcj4n5nxpmgv0u5r3irlaef5
+    REFERENCES users
+    CONSTRAINT fkdklqrqprcbj3lfaqm3dsk4t7q
+    REFERENCES users,
+  answer        VARCHAR(255),
+  manager_id    BIGINT
+    CONSTRAINT fks6tsffdrhdtbhry6qc21mutqa
+    REFERENCES users
 );
-
-ALTER TABLE file
-  ADD CONSTRAINT fkg01s4qlvr0bwp9a66ov1kykte
-FOREIGN KEY (ticket_id) REFERENCES ticket;
-
 CREATE TABLE topic
 (
   id   BIGSERIAL NOT NULL
@@ -116,61 +135,67 @@ CREATE TABLE topic
     PRIMARY KEY,
   name VARCHAR(255)
 );
-
-ALTER TABLE post
-  ADD CONSTRAINT fkk0ab8mjj94yfpyebhmy5kydc9
-FOREIGN KEY (topic_id) REFERENCES topic;
-
 CREATE TABLE user_exposition
 (
-  user_id       BIGINT NOT NULL,
+  user_id       BIGINT NOT NULL
+    CONSTRAINT fk7f9s0y2klrbwh9mvg83bvme2s
+    REFERENCES users,
   exposition_id BIGINT NOT NULL
-    CONSTRAINT fka6lmq0142of5kwukjb5fyr15t
+    CONSTRAINT fktodaolnvkakhkcdm3cc31ytjp
     REFERENCES exposition,
   CONSTRAINT user_exposition_pkey
   PRIMARY KEY (user_id, exposition_id)
 );
-
 CREATE TABLE users
 (
   id          BIGSERIAL    NOT NULL
     CONSTRAINT users_pkey
     PRIMARY KEY,
   avatar_path VARCHAR(255),
-  email       VARCHAR(50)  NOT NULL
-    CONSTRAINT uk_6dotkott2kjsp8vw4d0m25fb7
-    UNIQUE,
   name        VARCHAR(50)  NOT NULL,
   password    VARCHAR(255) NOT NULL,
   role        VARCHAR(255),
-  username    VARCHAR(50)
+  login       VARCHAR(50)
 );
 
-ALTER TABLE exhibit
-  ADD CONSTRAINT fkg47tygno2rb4sk8e3jqewo8cw
-FOREIGN KEY (author_id) REFERENCES users;
+create table if not exists token
+(
+  id           bigserial not null
+    constraint token_pkey
+    primary key,
+  expired_date bytea,
+  value        varchar(255),
+  user_id      bigint
+    constraint fkj8rfw4x0wjjyibfqq566j4qng
+    references users
+);
 
-ALTER TABLE news
-  ADD CONSTRAINT fkbe42a6fnxcv7xbq2sd33ulmm5
-FOREIGN KEY (author_id) REFERENCES users;
+create table userconnection
+(
+  userid         varchar(255) not null,
+  provideruserid varchar(255) not null,
+  providerid     varchar(255) not null,
+  accesstoken    varchar(512),
+  displayname    varchar(255),
+  expiretime     bigint,
+  imageurl       varchar(512),
+  profileurl     varchar(512),
+  rank           integer      not null,
+  refreshtoken   varchar(512),
+  role           integer,
+  secret         varchar(512),
+  constraint userconnection_pkey
+  primary key (userid, provideruserid, providerid)
+);
 
-ALTER TABLE post
-  ADD CONSTRAINT fkn1eg4afbov769ple6qsvmbe4n
-FOREIGN KEY (author_id) REFERENCES users;
 
-ALTER TABLE private_message
-  ADD CONSTRAINT fk3mjc5gwe04kt18bfek8rpi8w
-FOREIGN KEY (recipient_id) REFERENCES users;
-
-ALTER TABLE private_message
-  ADD CONSTRAINT fkf6nbmipk0d9vln6rpcml7x883
-FOREIGN KEY (sender_id) REFERENCES users;
-
-ALTER TABLE ticket
-  ADD CONSTRAINT fkarcj4n5nxpmgv0u5r3irlaef5
-FOREIGN KEY (recipient_id) REFERENCES users;
-
-ALTER TABLE user_exposition
-  ADD CONSTRAINT fk7f9s0y2klrbwh9mvg83bvme2s
-FOREIGN KEY (user_id) REFERENCES users;
+create function update_changetimestamp_column()
+  returns trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  NEW.last_used = now();
+  RETURN NEW;
+END;
+$$;
 

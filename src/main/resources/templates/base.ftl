@@ -1,6 +1,6 @@
 <#macro head>
 <#--${user.getFullAvatarPath()!'-->
-    <#assign user_image="/img/portfolio_01.jpg">
+    <#assign user_image="/img/portfolio_03.jpg">
 <meta charset="UTF-8">
 <meta name="_csrf" content="${_csrf.token}"/>
 <meta name="_csrf_header" content="${_csrf.headerName}"/>
@@ -40,7 +40,7 @@
         <ul class="navbar-nav mr-auto">
             <li>
                 <a class="navbar-brand" href="/">
-                    <img src="" width="30" height="30" class="d-inline-block align-top" alt="">
+                    <img src="/img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
                     ARTGALLERY</a>
             </li>
             <li class="nav-item">
@@ -52,32 +52,44 @@
             <li class="nav-item">
                 <a class="nav-link" href="/reservation">Забронировать</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/expositions/plan">Программа</a>
+            </li>
         </ul>
-
         <ul class="navbar-nav">
             <#if user??>
                 <li class="nav-item">
-                    <a class="nav-link"><img src="${user_image!''}" width="30" height="30"
-                                             class="rounded-circle" alt=""></a>
+                    <a style="margin-top: -4px" class="nav-link"><img src="${user_image!''}" width="30" height="30"
+                                                                      class="rounded-circle" alt=""></a>
                 </li>
                 <li class="nav-item">
                     <a tabindex="0" class="nav-link" data-toggle="tooltip" name="Войти в личный кабинет"
                        href="/admin">${user.name}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout">Выйти</a>
+                    <form id="logout-form" action="/logout" method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <a class="nav-link" onclick="document.getElementById('logout-form').submit();">Выйти</a>
+                    </form>
                 </li>
             <#else>
                 <li class="nav-item">
                     <a class="nav-link" href="/signIn">Войти</a>
                 </li>
             </#if>
+            <li class="nav-item">
+                <form class="form-inline" method="post" action="/search/tag">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <div id="the-basics">
+                        <input style="margin-top: -4px" class="form-control typeahead" name="query" type="text"
+                               placeholder="Search">
+                        <button style="margin-top: 4px" class="form-control btn btn-outline-success" type="submit">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <div id="the-basics"></div>
-            <input class="form-control mr-sm-2 typeahead" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" onclick="search()">Search</button>
-        </form>
     </div>
 </nav>
 </#macro>
@@ -127,11 +139,12 @@
 <#macro scripts>
 <!-- jQuery 3 -->
 <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/js/typeahead.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
         integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
         crossorigin="anonymous"></script>
 <script src="/js/bootstrap.min.js"></script>
-<script src="/js/typeahead.js"></script>
+
 <script>
     var substringMatcher = function (strs) {
         return function findMatches(q, cb) {
@@ -155,18 +168,29 @@
         };
     };
 
-    var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-        'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
-        'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-        'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-        'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-        'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
-        'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
-        'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-        'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-    ];
+    var states = [];
 
-    $('#the-basics').find('.typeahead').typeahead({
+    $.ajax({
+        type: "GET",
+        contentType: "application/json",
+        url: "/api/exhibits",
+        data: {},
+        dataType: 'json',
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            console.log("SUCCESS : ", data);
+            for (var i = 0; i < data.length; i++) {
+                states.push(data[i]["name"]);
+            }
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+        }
+    });
+
+
+    $('#the-basics .typeahead').typeahead({
                 hint: true,
                 highlight: true,
                 minLength: 1
@@ -175,6 +199,25 @@
                 name: 'states',
                 source: substringMatcher(states)
             });
+</script>
+
+
+<script>
+    (function () {
+        var widget_id = 895967;
+        _shcp = [{widget_id: widget_id}];
+        var lang = (navigator.language || navigator.systemLanguage
+                || navigator.userLanguage || "en")
+                .substr(0, 2).toLowerCase();
+        var url = "widget.siteheart.com/widget/sh/" + widget_id + "/" + lang + "/widget.js";
+        var hcc = document.createElement("script");
+        hcc.type = "text/javascript";
+        hcc.async = true;
+        hcc.src = ("https:" == document.location.protocol ? "https" : "http")
+                + "://" + url;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hcc, s.nextSibling);
+    })();
 </script>
 <script>
     $(function () {

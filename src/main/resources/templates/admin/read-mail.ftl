@@ -32,7 +32,7 @@
         <section class="content">
             <div class="row">
                 <div class="col-md-3">
-                    <a href="compose.html" class="btn btn-primary btn-block margin-bottom">Compose</a>
+                    <a href="/admin/compose" class="btn btn-primary btn-block margin-bottom">Compose</a>
 
                     <div class="box box-solid">
                         <div class="box-header with-border">
@@ -46,14 +46,8 @@
                         </div>
                         <div class="box-body no-padding">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="mailbox.html"><i class="fa fa-inbox"></i> Inbox
-                                    <span class="label label-primary pull-right">0</span></a></li>
-                                <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
-                                <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
-                                <li><a href="#"><i class="fa fa-filter"></i> Junk <span
-                                        class="label label-warning pull-right">65</span></a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-trash-o"></i> Trash</a></li>
+                                <li class="active"><a href="/admin/mailbox"><i class="fa fa-inbox"></i> All
+                                <li><a href="/admin/mailbox/new"><i class="fa fa-envelope-o"></i> New</a></li>
                             </ul>
                         </div>
                         <!-- /.box-body -->
@@ -125,20 +119,20 @@
                             <!-- /.mailbox-read-message -->
                         </div>
                         <!-- /.box-body -->
-                        <div class="box-footer">
-                            <ul class="mailbox-attachments clearfix">
-                                <li>
-                                    <span class="mailbox-attachment-icon"><i class="fa fa-file-pdf-o"></i></span>
+                    <#--<div class="box-footer">-->
+                    <#--<ul class="mailbox-attachments clearfix">-->
+                    <#--<li>-->
+                    <#--<span class="mailbox-attachment-icon"><i class="fa fa-file-pdf-o"></i></span>-->
 
-                                    <div class="mailbox-attachment-info">
-                                        <a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i>
-                                            Sep2014-report.pdf</a>
-                                        <a href="#" class="btn btn-default btn-xs pull-right"><i
-                                                class="fa fa-cloud-download"></i></a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                    <#--<div class="mailbox-attachment-info">-->
+                    <#--<a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i>-->
+                    <#--Sep2014-report.pdf</a>-->
+                    <#--<a href="#" class="btn btn-default btn-xs pull-right"><i-->
+                    <#--class="fa fa-cloud-download"></i></a>-->
+                    <#--</div>-->
+                    <#--</li>-->
+                    <#--</ul>-->
+                    <#--</div>-->
                         <!-- /.box-footer -->
                     </div>
                     <!-- /. box -->

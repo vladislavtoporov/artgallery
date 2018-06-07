@@ -38,15 +38,19 @@
                         </#if>
                             <input class="form-control pull-right" placeholder="название" required pattern=".+"
                                    type="text" id="name" value="${model.name!""}">
-                            <textarea required id="content" rows="10" cols="80">${model.content!""}</textarea>
+                            <textarea required id="content" rows="10" cols="80">${model.content!"описание"}</textarea>
 
                             <select class="form-control pull-right" required id="exposition_id">
                             <#list expositions as e>
-                                <option value="${e.id}" id="${e.id}">${e.name}</option>
+                                <#if e?counter == 1>
+                                    <option selected value="${e.id}" id="${e.id}">${e.name}</option>
+                                <#else>
+                                    <option value="${e.id}" id="${e.id}">${e.name}</option>
+                                </#if>
                             </#list>
                             </select>
                             <div class="text-center">
-                                <input class="btn btn-lg btn-primary" type="submit" value="Сохранить" id="submit">
+                                <input class="btn btn-primary btn-lg" type="submit" value="Сохранить" id="submit">
                             </div>
                         </form>
 
@@ -69,13 +73,13 @@
                                    name="originName"
                                    id="originName">
                             <div class="btn btn-default btn-file">
-                                <i class="fa fa-paperclip"></i> Прикрепить изображение
+                                <i class="fa fa-paperclip"></i> Прикрепить файл
                                 <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected()"/>
                             </div>
                             <div id="fileName"></div>
                             <div id="fileSize"></div>
                             <div id="fileType"></div>
-                            <input type="button" class="btn btn-default btn-file" onclick="uploadFile()"
+                            <input type="button" class="btn btn-priamary btn-file" onclick="uploadFile()"
                                    value="Upload"/>
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped active" role="progressbar"
@@ -104,7 +108,9 @@
 <!-- Bootstrap WYSIHTML5 -->
 <script src="/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <script>
-    document.getElementById('exposition_id').value = $("#exp-id").val();
+    if $("#exp-id").val() != null {
+        document.getElementById('exposition_id').value = $("#exp-id").val();
+    }
 </script>
 <script>
     $(function () {

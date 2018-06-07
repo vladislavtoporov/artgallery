@@ -2,6 +2,7 @@ package ru.kpfu.itis.artgallery.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -39,16 +40,19 @@ public class Exposition {
     @Column(columnDefinition = "INT DEFAULT 0")
     private Integer price;
 
+    private String picture;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date start;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date finish;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "exposition")
     private Set<Exhibit> exhibits;
 
-
+    @JsonIgnore
     @ManyToMany(targetEntity = User.class, mappedBy = "expositionsAccess")
     private Set<User> usersAccess;
 
@@ -61,12 +65,8 @@ public class Exposition {
         this.name = expositionForm.getName();
         this.description = expositionForm.getDescription();
         this.owner = owner;
-        System.out.println("\n\n\n\n");
-        System.out.println(expositionForm.getStart());
         String[] startArray = expositionForm.getStart().split("\\.");
-        System.out.println(Arrays.toString(startArray));
         int[] startValue = Arrays.stream(startArray).mapToInt(Integer::parseInt).toArray();
-        System.out.println(Arrays.toString(startValue));
         String[] finishArray = expositionForm.getFinish().split("\\.");
         int[] finishValue = Arrays.stream(finishArray).mapToInt(Integer::parseInt).toArray();
 

@@ -8,19 +8,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.artgallery.models.Exhibit;
 import ru.kpfu.itis.artgallery.repositories.ExhibitRepository;
-import ru.kpfu.itis.artgallery.repositories.FileRepository;
 import ru.kpfu.itis.artgallery.services.ExhibitService;
+
+import java.util.Optional;
 
 @Service
 public class ExhibitServiceImpl implements ExhibitService {
 
     private ExhibitRepository exhibitRepository;
-    private FileRepository fileRepository;
 
     @Autowired
-    public ExhibitServiceImpl(ExhibitRepository exhibitRepository, FileRepository fileRepository) {
+    public ExhibitServiceImpl(ExhibitRepository exhibitRepository) {
         this.exhibitRepository = exhibitRepository;
-        this.fileRepository = fileRepository;
     }
 
     @Override
@@ -32,6 +31,17 @@ public class ExhibitServiceImpl implements ExhibitService {
     public Page<Exhibit> findSimilar(Exhibit exhibit) {
         return exhibitRepository.findAllByAuthor(new PageRequest(0, 10, Sort.Direction.ASC, "name"), exhibit.getAuthor());
     }
+
+    @Override
+    public Optional<Exhibit> findByName(String name) {
+        return exhibitRepository.findByName(name);
+    }
+
+    @Override
+    public Page<Exhibit> findLast() {
+        return exhibitRepository.findAll(new PageRequest(0, 10, Sort.Direction.DESC, "ts"));
+    }
+
 
     @Override
     public Page<Exhibit> findAllSortByName(int page) {

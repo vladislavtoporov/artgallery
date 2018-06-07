@@ -1,4 +1,4 @@
-package ru.kpfu.itis.artgallery.controllers;
+package ru.kpfu.itis.artgallery.controllers.advice;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import ru.kpfu.itis.artgallery.services.AuthenticationService;
 
-@ControllerAdvice
+@ControllerAdvice()
 public class AdviceController {
     private AuthenticationService authenticationService;
 

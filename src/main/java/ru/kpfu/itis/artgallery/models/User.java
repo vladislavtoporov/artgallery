@@ -6,8 +6,10 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import ru.kpfu.itis.artgallery.enums.Role;
+import ru.kpfu.itis.artgallery.enums.SocialMediaService;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -29,7 +31,6 @@ public class User {
     @Column(length = 50, nullable = false)
     private String name;
 
-    //    @Email
     @JsonIgnore
     @Column(unique = true, length = 50, nullable = false)
     private String login;
@@ -46,11 +47,20 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sign_in_provider", length = 20)
+    private SocialMediaService signInProvider;
+
+
     @JsonIgnore
     @ManyToMany(targetEntity = Exposition.class, cascade = CascadeType.ALL)
     @JoinTable(name = "user_exposition",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "exposition_id", referencedColumnName = "id"))
     private Set<Exposition> expositionsAccess;
+
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
 }

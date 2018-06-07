@@ -7,10 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.kpfu.itis.artgallery.models.Exhibit;
 import ru.kpfu.itis.artgallery.models.Exposition;
 import ru.kpfu.itis.artgallery.services.ExhibitService;
 import ru.kpfu.itis.artgallery.services.ExpositionService;
+
+import java.util.Optional;
 
 @Controller
 public class SearchController {
@@ -24,27 +28,55 @@ public class SearchController {
     }
 
     @GetMapping(value = "/search")
-    public String search() {
-        return "search";
-    }
-
-    @PostMapping(value = "/search")
-    public String searchPost(@RequestParam String querry,
-                             @RequestParam(required = false) String sort,
-                             @RequestParam(required = false) Boolean exhibitFlag,
-                             @RequestParam(required = false) Boolean expositionFlag,
-                             @RequestParam(required = false) Integer page,
-                             Model model) {
-        model.addAttribute("querry", querry);
-        if (exhibitFlag != null) {
-            Page<Exhibit> exhibits = exhibitService.findAllByQuerry(querry, sort, 0);
+    public String searchGet(@RequestParam(required = false) String query,
+                            @RequestParam(required = false, defaultValue = "author") String sort,
+                            @RequestParam(required = false, defaultValue = "exhibit") String type,
+                            @RequestParam(required = false, defaultValue = "0") Integer page,
+                            Model model) {
+        if (query == null) {
+            query = (String) model.asMap().getOrDefault("query", "");
+        }
+        model.addAttribute("query", query);
+        model.addAttribute("sort", sort);
+        model.addAttribute("type", type);
+        if ("exhibit".equals(type)) {
+            Page<Exhibit> exhibits = exhibitService.findAllByQuerry(query, sort, page);
             model.addAttribute("exhibits", exhibits);
         }
-        if (expositionFlag != null) {
-            Page<Exposition> expositions = expositionService.findAllByQuerry(querry, sort, 0);
+        if ("exposition".equals(type)) {
+            Page<Exposition> expositions = expositionService.findAllByQuerry(query, sort, page);
             model.addAttribute("expositions", expositions);
         }
+        model.addAttribute("toplist", exhibitService.findLast());
         return "search";
     }
 
+
+    @PostMapping(value = "/search/tag")
+    public String getByTag(@RequestParam String query, RedirectAttributes attributes) {
+        Optional<Exhibit> exhibit = exhibitService.findByName(query);
+        if (exhibit.isPresent()) {
+            return "redirect:/exhibits/" + exhibit.get().getId();
+        } else {
+            attributes.addFlashAttribute("query", query);
+            return "redirect:/search";
+        }
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/search/ajax/expositions")
+    public Page<?> searchAjaxExpositions(String query, String sort) {
+
+        return expositionService.findAllByQuerry(query, sort, 0);
+
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/search/ajax/exhibits")
+    public Page<?> searchAjaxExhibits(String query, String sort) {
+
+        return exhibitService.findAllByQuerry(query, sort, 0);
+
+
+    }
 }

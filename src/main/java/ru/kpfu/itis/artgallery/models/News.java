@@ -3,6 +3,7 @@ package ru.kpfu.itis.artgallery.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -24,9 +25,12 @@ public class News {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_id_seq")
     @SequenceGenerator(name = "news_id_seq", sequenceName = "news_id_seq", allocationSize = 1)
     private Long id;
+    @NotEmpty
     private String header;
+    @NotEmpty
     private String preview;
     @Column(length = 3000)
+    @NotEmpty
     private String content;
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp ts;

@@ -3,6 +3,7 @@ package ru.kpfu.itis.artgallery.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.validator.constraints.NotEmpty;
 import ru.kpfu.itis.artgallery.forms.PrivateMessageForm;
 
 import javax.persistence.*;
@@ -24,15 +25,18 @@ public class PrivateMessage {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "private_message_id_seq")
     @SequenceGenerator(name = "private_message_id_seq", sequenceName = "private_message_id_seq", allocationSize = 1)
     private Long id;
-
+    @NotEmpty
     @Column(length = 500)
     private String content;
-
+    @NotEmpty
     @Column(length = 100)
     private String header;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp ts;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isRead;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipient_id", nullable = false)
