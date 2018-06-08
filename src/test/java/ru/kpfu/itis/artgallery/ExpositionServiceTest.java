@@ -22,10 +22,6 @@ public class ExpositionServiceTest {
     @Autowired
     public UserRepository userRepository;
 
-//    @Before
-//    public void setUp() {
-//        Mockito.when(exhibitService.findAllByQuerry().thenReturn();
-//    }
 
     @Test
     public void whenFindByQuerryThenReturnListExhibits() {
@@ -37,8 +33,6 @@ public class ExpositionServiceTest {
             if (item.getOwner() != exposition.getOwner())
                 Assert.fail();
         });
-//        List<Exhibit> exhibits = exhibitService.findAllByQuerry("");
-//        Assert.assertTrue(optional.isPresent());
     }
 
 }

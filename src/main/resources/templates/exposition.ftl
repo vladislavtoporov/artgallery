@@ -59,8 +59,8 @@
 
                     </div><!-- /.row -->
                 </div>
-
-
+            </div>
+            <div>
                 <div class="container lobster">
                     <div id="vk_comments"></div>
                     <script type="text/javascript">
@@ -110,10 +110,9 @@
                 <#--</div>-->
                 <#--<div class="text-center"><a class="btn btn-lg btn-primary" href="#" role="button">-->
                 <#--Показать ещё</a>-->
-                <#--</div>-->
+                </div>
             </div>
         </div>
-
         <div class="col-lg-3 text-center">
             <div class="well lobster">
                 <h3>Экспозиции этого автора</h3>
@@ -125,10 +124,6 @@
                     <#if ex.exhibits??>
                         <img src="${ex.exhibits?first.getPictureFile()!''}" width="100" height="100">
                     </#if>
-                <#--<div class="lobster">-->
-                <#--<h4>Рейтинг 100</h4>-->
-                <#--<h4>25 отзывов</h4>-->
-                <#--</div>-->
                 </div>
             </#list>
 

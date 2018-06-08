@@ -23,6 +23,9 @@ public class ExpositionServiceImpl implements ExpositionService {
         if ("price".equals(filter)) {
             return expositionRepository.findAllByNameContainingOrderByPrice(new PageRequest(page, 10), querry);
         }
+        if ("author".equals(filter)) {
+            return expositionRepository.findAllByNameContainingOrderByOwner(new PageRequest(page, 10), querry);
+        }
         if ("date".equals(filter)) {
             return expositionRepository.findAllByNameContainingOrderByStart(new PageRequest(page, 10), querry);
         }

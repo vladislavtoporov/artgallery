@@ -15,7 +15,7 @@
     <#--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>-->
         <input type="text" class="form-control form-control-lg" name="query" id="query" value="${query!""}"
                style="width: 90%"/>
-        <button type="submit" class="btn btn-primary btn-lg" id="submit">Найти</button>
+        <button type="button" onclick="ajax()" class="btn btn-primary btn-lg" id="submit">Найти</button>
     </form>
     <div class="row space">
         <div class="col-lg-2">
@@ -100,38 +100,79 @@
 <@footer/>
 <@scripts/>
 <script>
-    $(document).ready(function () {
-        $("#queryForm").submit(function (event) {
-            event.preventDefault();
-
-            var query = {};
-            query["query"] = $('#query');
-            alert($('#query'));
-            query["sort"] = $('input[name="sort"]:checked').val();
-
-            if ($("#exhibitRadio").checked) {
-                var ajax_url = "/search/ajax/exhibits";
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json",
-                    url: ajax_url,
-                    data: JSON.stringify(query),
-                    dataType: 'json',
-                    cache: false,
-                    timeout: 600000,
-                    success: function (data) {
-                        console.log("SUCCESS : ", data);
-                    },
-                    error: function (e) {
-                        console.log("ERROR : ", e);
+    function ajax() {
+        var query = {};
+        query["query"] = $('#query').val();
+        query["sort"] = $('input[name="sort"]:checked').val();
+        if ($("#exhibitRadio").prop("checked")) {
+            var ajax_url = "/search/ajax/exhibits";
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: ajax_url,
+                data: JSON.stringify(query),
+                dataType: 'json',
+                cache: false,
+                timeout: 600000,
+                success: function (data) {
+                    $("#content").html("");
+                    console.log(data.toString());
+                    var info = data["content"];
+                    for (var i = 0; i < info.length; i++) {
+                        var str = "<div class=\"row\">\n" +
+                                "                        <div class=\"col-lg-5\">\n" +
+                                "                            <img src=\"" + info[i]["pictureFile"] + "\" width=\"140\" height=\"140\">\n" +
+                                "                        </div>\n" +
+                                "                        <div class=\"col-lg-7\">\n" +
+                                "                            <a href=\"/expositions/" + info[i]["id"] + "\"><h2>" + info[i]["name"] + "</h2></a>\n" +
+                                "                        </div>\n" +
+                                "                    </div>" +
+                                " <hr align=\"center\" width=\"100%\" size=\"1\" color=\"#fafafa\"/>";
+                        $("#content").append(str);
                     }
-                });
-            }
-            else {
-                alert("else")
-            }
-        };
-    });
+                    console.log("SUCCESS : ", data);
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+        }
+        else {
+            var ajax_url = "/search/ajax/expositions";
+            alert("exp");
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: ajax_url,
+                data: JSON.stringify(query),
+                dataType: 'json',
+                cache: false,
+                timeout: 600000,
+                success: function (data) {
+                    $("#content").html("");
+                    console.log(data.toString());
+                    var info = data["content"];
+                    for (var i = 0; i < info.length; i++) {
+                        var str = " <div class=\"row\">\n" +
+                                "                        <div class=\"col-lg-5\">\n" +
+                                "                                <img src=\"" + info[i]["exhibits"][0]["pictureFile"] + "\" width=\"140\" height=\"140\">\n" +
+                                "                        </div>\n" +
+                                "                        <div class=\"col-lg-7\">\n" +
+                                "                            <a href=\"/exhibits/" + info[i]["id"] + "\"><h2>" + info[i]["name"] + "</h2></a>\n" +
+                                "                        </div>\n" +
+                                "                    </div>\n" +
+                                "                    <hr align=\"center\" width=\"100%\" size=\"1\" color=\"#fafafa\"/>";
+                        $("#content").append(str);
+                    }
+                    console.log("SUCCESS : ", data);
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+        }
+    }
+
 </script>
 </body>
 </html>

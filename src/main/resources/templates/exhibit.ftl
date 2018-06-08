@@ -53,9 +53,11 @@
                 </div>
             </div>
             <div class="marketing">
+                <h1 class="text-center">Доступные видео и аудио</h1>
                 <div class="row">
                 <#list videos as video>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" style="margin: auto">
+                        <p>${video.name}</p>
                         <video width="320" height="240" controls controlsList="nodownload">
                             <source src="${video.getFullPath()}" type="video/${video.format}">
                             Your browser does not support the video tag.
@@ -65,9 +67,10 @@
                 </div>
             </div>
             <div class="marketing">
-                <div class="row">
+                <div class="row" style="margin: auto">
                 <#list audios as audio>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" style="margin: auto">
+                        <p>${audio.name}</p>
                         <audio controls controlsList="nodownload">
                             <source src="${audio.getFullPath()}" type="audio/${audio.format}">
                             Your browser does not support the audio element.
@@ -76,36 +79,11 @@
                 </#list>
                 </div>
             </div>
-            <div class="well">
+            <div>
                 <div id="vk_comments"></div>
                 <script type="text/javascript">
                     VK.Widgets.Comments("vk_comments", {limit: 50, attach: "*"});
                 </script>
-            <#--<div class="container lobster">-->
-            <#--<h3 class="text-center">Отзывы</h3>-->
-            <#--<div class="row">-->
-            <#--<div class="col-lg-2">-->
-            <#--<img src="/img/portfolio_07.jpg" width="90" height="90" class="rounded-circle">-->
-            <#--</div>-->
-            <#--<div class="col-lg-10">-->
-            <#--<h4>Иванов Иван</h4>-->
-            <#--<h5>Оценка 5</h5>-->
-            <#--</div>-->
-            <#--<div style="margin-top: 10px">-->
-            <#--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias iusto natus officia-->
-            <#--placeat-->
-            <#--recusandae-->
-            <#--tempora temporibus velit. A aliquam eos nostrum quia rerum tempora unde velit. Deleniti-->
-            <#--facere-->
-            <#--reiciendis voluptate!</p>-->
-            <#--<h6 class="text-right">Опубликовано 21.10.2017</h6>-->
-            <#--<hr align="center" width="100%" size="1" color="#fafafa"/>-->
-            <#--</div>-->
-            <#--</div>-->
-            <#--</div>-->
-            <#--<div class="text-center"><a class="btn btn-lg btn-primary" href="#" role="button">-->
-            <#--Показать ещё</a>-->
-            <#--</div>-->
             </div>
         </div>
 

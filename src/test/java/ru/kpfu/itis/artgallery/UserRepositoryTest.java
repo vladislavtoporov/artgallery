@@ -14,14 +14,12 @@ import ru.kpfu.itis.artgallery.config.Application;
 import ru.kpfu.itis.artgallery.forms.UserRegistrationForm;
 import ru.kpfu.itis.artgallery.models.User;
 import ru.kpfu.itis.artgallery.repositories.UserRepository;
-import ru.kpfu.itis.artgallery.services.UserService;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -31,8 +29,6 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
     private User user;
 
-    @MockBean
-    private UserService userService;
 
     @MockBean
     private PasswordEncoder passwordEncoderMock;
@@ -73,20 +69,16 @@ public class UserRepositoryTest {
             Object[] arguments = invocation.getArguments();
             return (User) arguments[0];
         });
-//
-//        userService.register(userForm);
-//
 
-
-        verify(userRepository).findOneByLogin(email);
+        Optional<User> u = userRepository.findOneByLogin(email);
         User user = userRepository.save(this.user);
-        assertThat(user).hasFieldOrPropertyWithValue("email", email)
+        assertThat(user).hasFieldOrPropertyWithValue("login", email)
                 .hasFieldOrPropertyWithValue("password", password)
                 .hasFieldOrPropertyWithValue("name", email);
+        u = userRepository.findOneByLogin(email);
+        verify(userRepository).save(user);
+        verify(userRepository, times(2)).findOneByLogin(email);
+        verifyNoMoreInteractions(userRepository);
 
-//        verify(userRepository, times(1)).save(user);
-        verify(userRepository).findOneByLogin(email);
-//        verifyNoMoreInteractions(userRepository);
-//        verifyZeroInteractions(passwordEncoderMock);
     }
 }

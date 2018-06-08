@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.kpfu.itis.artgallery.forms.SearchForm;
 import ru.kpfu.itis.artgallery.models.Exhibit;
 import ru.kpfu.itis.artgallery.models.Exposition;
 import ru.kpfu.itis.artgallery.services.ExhibitService;
@@ -64,18 +62,18 @@ public class SearchController {
     }
 
     @ResponseBody
-    @GetMapping(value = "/search/ajax/expositions")
-    public Page<?> searchAjaxExpositions(String query, String sort) {
+    @PostMapping(value = "/search/ajax/expositions")
+    public Page<?> searchAjaxExpositions(@RequestBody SearchForm form) {
 
-        return expositionService.findAllByQuerry(query, sort, 0);
+        return expositionService.findAllByQuerry(form.getQuery(), form.getSort(), 0);
 
     }
 
     @ResponseBody
-    @GetMapping(value = "/search/ajax/exhibits")
-    public Page<?> searchAjaxExhibits(String query, String sort) {
-
-        return exhibitService.findAllByQuerry(query, sort, 0);
+    @PostMapping(value = "/search/ajax/exhibits")
+    public Page<?> searchAjaxExhibits(@RequestBody SearchForm form) {
+        System.out.println();
+        return exhibitService.findAllByQuerry(form.getQuery(), form.getSort(), 0);
 
 
     }

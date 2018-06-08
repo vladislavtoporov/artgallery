@@ -144,6 +144,13 @@ public class AdminController {
         return "admin/mailbox";
     }
 
+    @GetMapping("/mailbox/sent")
+    public String mailboxSent(Model model, Authentication authentication) {
+        User user = authService.getUserByAuthentication(authentication);
+        model.addAttribute("model", privateMessageRepository.findAllBySender(user));
+        return "admin/mailbox";
+    }
+
     @GetMapping("/readMail/{id}")
     public String readMail(Model model, @PathVariable Long id, Authentication authentication) {
         PrivateMessage message = privateMessageRepository.getOne(id);

@@ -48,6 +48,8 @@
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="active"><a href="/admin/mailbox"><i class="fa fa-inbox"></i> All
                                 <li><a href="/admin/mailbox/new"><i class="fa fa-envelope-o"></i> New</a></li>
+                                <li><a href="/admin/mailbox/sent"><i class="fa fa-envelope-o"></i> Sent</a></li>
+
                             </ul>
                         </div>
                         <!-- /.box-body -->

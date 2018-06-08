@@ -9,4 +9,6 @@ import java.util.List;
 public interface PrivateMessageRepository extends JpaRepository<PrivateMessage, Long> {
     List<PrivateMessage> findAllByRecipientAndIsRead(User user, Boolean flag);
     List<PrivateMessage> findAllByRecipient(User user);
+
+    List<PrivateMessage> findAllBySender(User user);
 }

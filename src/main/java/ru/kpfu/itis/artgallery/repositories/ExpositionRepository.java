@@ -19,4 +19,6 @@ public interface ExpositionRepository extends JpaRepository<Exposition, Long> {
     Page<Exposition> findAllByOwner(Pageable pageable, User owner);
 
     List<Exposition> findAllByFinishAfter(Date date);
+
+    Page<Exposition> findAllByNameContainingOrderByOwner(Pageable pageRequest, String querry);
 }
