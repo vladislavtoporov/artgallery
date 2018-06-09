@@ -151,6 +151,7 @@ public class MultiWebSecurityConfig {
                     .antMatchers("/admin/expositions/**").hasAnyAuthority("ADMIN", "STAFF", "SUPERVISER", "ARTIST")
                     .antMatchers("/admin/**").hasAnyAuthority("ADMIN", "STAFF", "SUPERVISER")
                     .antMatchers("/rest/**").hasAnyAuthority("ADMIN", "STAFF", "SUPERVISER", "ARTIST")
+                    .antMatchers("/upload/**").hasAnyAuthority("ADMIN", "STAFF", "SUPERVISER", "ARTIST")
                     .antMatchers("/**").permitAll()
 
                     .and()

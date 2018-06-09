@@ -52,6 +52,7 @@ public class LoginServiceImpl implements LoginService {
                 return TokenDto.builder()
                         .value(token)
                         .userLogin(tokenModel.getUser().getLogin())
+                        .userId(tokenModel.getUser().getId())
                         .build();
             } else {
                 return TokenDto.builder().value(Jwts.builder()
@@ -60,6 +61,7 @@ public class LoginServiceImpl implements LoginService {
                         .setSubject(user.getId().toString())
                         .signWith(SignatureAlgorithm.HS512, jwtSecret).compact())
                         .userLogin(user.getLogin())
+                        .userId(user.getId())
                         .build();
             }
         } else

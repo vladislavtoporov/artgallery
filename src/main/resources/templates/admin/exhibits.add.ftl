@@ -58,7 +58,7 @@
                         <div class="feedback"></div>
                         <div id="uploaded">
                             <form action="" id="fileForm">
-                                <button type="submit" class="btn btn-primary btn-lg">Обновить</button>
+                                <button type="submit" class="btn btn-primary btn-lg">Удалить</button>
                             </form>
                             <ul>
                                 <#list files as file>
@@ -182,10 +182,14 @@
         fd.append("exhibitId", $('#id').val());
         fd.append("file", document.getElementById('fileToUpload').files[0]);
         var xhr = new XMLHttpRequest();
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
         xhr.upload.addEventListener("progress", uploadProgress, false);
         xhr.addEventListener("error", uploadFailed, false);
+        xhr.addEventListener("load", uploadComplete, false);
         xhr.addEventListener("abort", uploadCanceled, false);
         xhr.open("POST", "/upload");
+        xhr.setRequestHeader(header, token);
         xhr.send(fd);
     }
 
@@ -193,14 +197,13 @@
         if (evt.lengthComputable) {
             var percentComplete = Math.round(evt.loaded * 100 / evt.total);
             $('#progressNumber').css('width', percentComplete.toString() + '%');
-//            $('#progressNumber').val(percentComplete.toString() + '%');
             document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
         }
     }
 
     function uploadComplete(evt) {
-//        var filename = $('#originName');
-//        $("#uploaded ul").append('<li><input type="checkbox" id="checkbox-"' +  filename + '><a href="/user/messages"></a></li>');
+        var filename = $('#originName').val();
+        $("#uploaded ul").append('<li><input type="checkbox"><a href="">' + filename + '</a></li>');
     }
 
     function uploadFailed(evt) {
@@ -222,7 +225,6 @@
             for (var i = 0; i < checkboxes.length; i++)
                 if (checkboxes[i].checked) {
                     var id = checkboxes[i].id.substring(5);
-                    alert(id)
                     var ajax_url = "/rest/files/" + id + "/delete";
                     $.ajax({
                         type: "POST",

@@ -65,9 +65,11 @@ public class UserRepositoryTest {
     public void registerNewUserShouldCreateNewUserAccount() {
 
         when(userRepository.findOneByLogin(email)).thenReturn(Optional.empty()).thenReturn(Optional.of(user));
+        when(passwordEncoderMock.matches(password, passwordEncoderMock.encode(password))).thenReturn(true);
         when(userRepository.save(isA(User.class))).thenAnswer((Answer<User>) invocation -> {
             Object[] arguments = invocation.getArguments();
             return (User) arguments[0];
+
         });
 
         Optional<User> u = userRepository.findOneByLogin(email);
@@ -79,6 +81,5 @@ public class UserRepositoryTest {
         verify(userRepository).save(user);
         verify(userRepository, times(2)).findOneByLogin(email);
         verifyNoMoreInteractions(userRepository);
-
     }
 }

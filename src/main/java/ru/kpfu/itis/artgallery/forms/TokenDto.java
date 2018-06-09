@@ -16,11 +16,13 @@ import java.util.stream.Collectors;
 public class TokenDto {
     private String value;
     private String userLogin;
+    private Long userId;
 
     public static TokenDto from(Token model) {
         return TokenDto.builder()
                 .value(model.getValue())
                 .userLogin(model.getUser().getLogin())
+                .userId(model.getUser().getId())
                 .build();
     }
 

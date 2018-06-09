@@ -2,60 +2,57 @@ package ru.kpfu.itis.artgallery.controllers;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ru.kpfu.itis.artgallery.models.Exhibit;
 import ru.kpfu.itis.artgallery.models.File;
 import ru.kpfu.itis.artgallery.models.FileUpload;
 import ru.kpfu.itis.artgallery.models.User;
 import ru.kpfu.itis.artgallery.repositories.ExhibitRepository;
 import ru.kpfu.itis.artgallery.repositories.FileRepository;
+import ru.kpfu.itis.artgallery.repositories.UserRepository;
 import ru.kpfu.itis.artgallery.services.AuthenticationService;
 import ru.kpfu.itis.artgallery.validators.FileUploadValidator;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/")
 public class FileUploadController {
     private FileRepository fileRepository;
     private ExhibitRepository exhibitRepository;
     private AuthenticationService authenticationService;
     @Value("${CLOUDINARY_URL}")
     private String CLOUDINARY_URL;
-    private FileUploadValidator fileUploadValidator;
+    private FileUploadValidator validator;
+    private UserRepository userRepository;
 
-    public FileUploadController(FileRepository fileRepository, ExhibitRepository exhibitRepository, AuthenticationService authenticationService, FileUploadValidator fileUploadValidator) {
+    @Autowired
+    public FileUploadController(FileRepository fileRepository, ExhibitRepository exhibitRepository, AuthenticationService authenticationService, FileUploadValidator validator, UserRepository userRepository) {
         this.fileRepository = fileRepository;
         this.exhibitRepository = exhibitRepository;
         this.authenticationService = authenticationService;
-        this.fileUploadValidator = fileUploadValidator;
-    }
-
-    @InitBinder("fileForm")
-    public void initFileUploadValidator(WebDataBinder binder) {
-        binder.addValidators(fileUploadValidator);
+        this.validator = validator;
+        this.userRepository = userRepository;
     }
 
     @SuppressWarnings("rawtypes")
+    @ResponseBody
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String uploadPhoto(@Valid @ModelAttribute("fileForm") FileUpload fileUpload, BindingResult result,
-                              ModelMap model, Authentication authentication) throws IOException {
-        FileUploadValidator validator = new FileUploadValidator();
+    public String uploadPhoto(@ModelAttribute FileUpload fileUpload, BindingResult result,
+                              Authentication authentication) throws IOException {
         validator.validate(fileUpload, result);
-
+        System.out.println("I am here");
         Map uploadResult = null;
         if (fileUpload.getFile() != null && !fileUpload.getFile().isEmpty()) {
+            System.out.println("fileUpload");
             Cloudinary cloudinary = new Cloudinary(CLOUDINARY_URL);
             uploadResult = cloudinary.uploader().upload(fileUpload.getFile().getBytes(),
                     ObjectUtils.asMap("resource_type", "auto"));
@@ -67,15 +64,13 @@ public class FileUploadController {
                 fileUpload.setVersion((Long) version);
             }
 
-//            fileUpload.setSignature((String) uploadResult.get("signature"));
-//            System.out.println(uploadResult.get("signature"));
             fileUpload.setFormat((String) uploadResult.get("format"));
             fileUpload.setResourceType((String) uploadResult.get("resource_type"));
+            System.out.println(uploadResult.get("resource_type"));
         }
 
         if (result.hasErrors()) {
-            model.addAttribute("fileUpload", fileUpload);
-            return "redirect:/direct_upload_form";
+            System.out.println(result.getAllErrors().get(0).getDefaultMessage());
         } else {
             User user = authenticationService.getUserByAuthentication(authentication);
             File file = new File();
@@ -92,16 +87,8 @@ public class FileUploadController {
                 }
 
             }
-//            model.addAttribute("upload", uploadResult);
-//            fileRepository.save(file);
-//            model.addAttribute("file", file);
-            return "/";
+            fileRepository.save(file);
         }
-    }
-
-    @RequestMapping(value = "/direct_upload_form", method = RequestMethod.GET)
-    public String directUploadPhotoForm(ModelMap model) {
-        model.addAttribute("photoUpload", new FileUpload());
-        return "direct_upload_form";
+        return "";
     }
 }
