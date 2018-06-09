@@ -36,7 +36,6 @@ public class Main extends Application {
     private StackPane view;
     private MediaPlayer mediaPlayer;
     private ClientAPI clientAPI;
-    private String token = "";
 
     @Override
     public void init() throws Exception {
@@ -113,7 +112,8 @@ public class Main extends Application {
             map.put("password", password.getText());
             String answer = clientAPI.post("/jwt/login", map);
             Token t = (new Gson()).fromJson(answer, Token.class);
-            this.token = t.getValue();
+            clientAPI.setToken(t.getValue());
+            clientAPI.setUserId(t.getUserId());
             result.setText(answer);
         });
         box.getChildren().addAll(l, l1, login, l2, password, button, result);
@@ -157,7 +157,7 @@ public class Main extends Application {
                 exhibit.put("id", ex.getId() + "");
                 exhibit.put("name", ex.getName());
                 exhibit.put("content", ex.getContent());
-                exhibit.put("userId", "7");
+                exhibit.put("userId", clientAPI.getUserId() + "");
                 setEditForm(exhibit);
             });
             List<Node> items = new ArrayList<>();
@@ -192,20 +192,17 @@ public class Main extends Application {
         VBox vbox = new VBox();
         Label l1 = new Label("name");
         Label l2 = new Label("HTML content");
-        Label l3 = new Label("user id");
         TextField name = new TextField((String) exhibit.getOrDefault("name", ""));
         TextArea content = new TextArea((String) exhibit.getOrDefault("content", ""));
-        TextField userId = new TextField((String) exhibit.getOrDefault("userId", ""));
         Button save = new Button("save");
         Label response = new Label();
-        vbox.getChildren().addAll(l1, name, l2, content, l3, userId, save, response);
+        vbox.getChildren().addAll(l1, name, l2, content, save, response);
         save.setOnMouseClicked(event -> {
             Map<String, Object> map = new HashMap<>();
-            System.out.println(exhibit.get("id"));
             map.put("id", exhibit.get("id"));
             map.put("name", name.getText());
             map.put("content", content.getText());
-            map.put("userId", userId.getText());
+            map.put("userId", clientAPI.getUserId() + "");
             String answer = clientAPI.post(exhibit.get("id") == null ?
                     "api/exhibits/add" : "api/exhibits/" + exhibit.get("id") + "/edit", map);
             response.setText(answer);

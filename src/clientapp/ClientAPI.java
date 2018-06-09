@@ -25,6 +25,24 @@ import javax.net.ssl.SSLContext;
 
 public class ClientAPI {
     private HttpClient httpClient;
+    private String token;
+    private Long userId = 7L;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public ClientAPI() {
         httpClient = HttpClientBuilder.create().build();
@@ -63,6 +81,8 @@ public class ClientAPI {
         StringBuilder answer = new StringBuilder();
         HttpPost post = new HttpPost(Constant.HOST + path);
         post.setHeader("Accept", "application/json");
+        if (token != null)
+            post.setHeader("Token", token);
 
         try {
             List<NameValuePair> nameValuePairs = new ArrayList<>();
