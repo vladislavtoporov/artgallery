@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.kpfu.itis.artgallery.forms.SearchForm;
 import ru.kpfu.itis.artgallery.models.Exhibit;
 import ru.kpfu.itis.artgallery.models.Exposition;
 import ru.kpfu.itis.artgallery.services.ExhibitService;
@@ -59,22 +58,5 @@ public class SearchController {
             attributes.addFlashAttribute("query", query);
             return "redirect:/search";
         }
-    }
-
-    @ResponseBody
-    @PostMapping(value = "/search/ajax/expositions")
-    public Page<?> searchAjaxExpositions(@RequestBody SearchForm form) {
-
-        return expositionService.findAllByQuerry(form.getQuery(), form.getSort(), 0);
-
-    }
-
-    @ResponseBody
-    @PostMapping(value = "/search/ajax/exhibits")
-    public Page<?> searchAjaxExhibits(@RequestBody SearchForm form) {
-        System.out.println();
-        return exhibitService.findAllByQuerry(form.getQuery(), form.getSort(), 0);
-
-
     }
 }
